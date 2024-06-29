@@ -16,6 +16,16 @@ void pexit(int ecode, char *format, ...){
 }
 
 
+int e_return(int ecode, char *format, ...){
+	char *msg = malloc(sizeof(char *));
+	va_list args;
+	va_start(args, format);
+	vsprintf(msg, format, args);
+	va_end(args);
+	printf("%s\n", msg);
+	return ecode;
+}
+
 /* get initial response: get flags from argument (user) */
 struct InitRes get_init_res(int argc, char *argv[]){
 	struct InitRes ires;
