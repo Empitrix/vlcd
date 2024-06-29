@@ -4,5 +4,7 @@
 *.dll
 *.so
 
+*.sh
+
 # directories
 dist/
