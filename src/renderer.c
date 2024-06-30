@@ -1,6 +1,8 @@
+#include <SDL2/SDL_events.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
 #include "rules.h"
+#include "utils.h"
 
 /* Render Text */
 void rtextf_rect(SDL_Renderer *rend, TTF_Font* font, char* text, int size, SDL_Rect rect, SDL_Color color){
@@ -12,14 +14,10 @@ void rtextf_rect(SDL_Renderer *rend, TTF_Font* font, char* text, int size, SDL_R
 }
 
 
-
-
-
-
 void sdl_init_win(int width, int height, void (*sdloop)(SDL_Window*, SDL_Renderer*, TTF_Font*, SDL_Event *)) {
 
 	if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
-		printf("Failed: %s\n", SDL_GetError());
+		pexit(1, "Failed: %s\n", SDL_GetError());
 	}
 
 	SDL_Window* win = SDL_CreateWindow("Visual Canvas",
@@ -31,15 +29,19 @@ void sdl_init_win(int width, int height, void (*sdloop)(SDL_Window*, SDL_Rendere
 
 	// FONT
 	TTF_Init();
-	// TTF_Font *font = TTF_OpenFont("./assets/VCR_OSD_MONO_1.001.ttf", FONTSIZ);
-	TTF_Font *font = TTF_OpenFont("./assets/RobotoMono-Regular.ttf", FONTSIZ);
+	// TTF_Font *font = TTF_OpenFont("./assets/poppins.ttf", FONTSIZ);
+	TTF_Font *font = TTF_OpenFont("./assets/roboto.ttf", FONTSIZ);
+	// TTF_Font *font = TTF_OpenFont("./assets/vcr.ttf", FONTSIZ);
 
 
 	if(font == NULL)
-		printf("TTF Failed: %s\n", TTF_GetError());
+		pexit(1, "TTF Failed: %s\n", TTF_GetError());
 
 
 	while(running){
+		SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+		SDL_RenderClear(rend);
+
 		SDL_Event event;
 
 		while(SDL_PollEvent(&event)){
@@ -48,7 +50,16 @@ void sdl_init_win(int width, int height, void (*sdloop)(SDL_Window*, SDL_Rendere
 					running = 0;
 					break;
 
-					default: break;
+				case SDL_KEYDOWN:
+					switch (event.key.keysym.scancode){
+						case SDL_SCANCODE_Q:  // clsoe the program when 'q' pressed
+							running = 0;
+							break;
+
+						default: break;
+					}
+
+				default: break;
 			}
 		}
 
@@ -62,5 +73,15 @@ void sdl_init_win(int width, int height, void (*sdloop)(SDL_Window*, SDL_Rendere
 
 	SDL_DestroyWindow(win);
 	SDL_Quit();
+}
+
+
+void sdl_cls(SDL_Renderer *rend){
+	SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+	SDL_RenderClear(rend);
+}
+
+void sdl_set(SDL_Renderer *rend){
+	SDL_RenderPresent(rend);
 }
 

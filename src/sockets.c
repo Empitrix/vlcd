@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include "utils.h"
+#include "rules.h"
 
 /*
 socket id (returned int) can be use for 'send' and 'read'
@@ -46,16 +47,26 @@ int server_soc(int port){
 
 	server_fd = socket(AF_INET, SOCK_STREAM, 0);
 
-	if (server_fd < 0)
+	if (server_fd < 0){
+		close(server_fd);
 		return e_return(-1, "Socket Error");
+	}
 		// pexit(1, "Socket Error");
 
 	// Forcefully attaching socket to the port 8080
-	status = setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
+	// status = setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
 
-	if (status)
+	struct timeval tv;
+	tv.tv_sec = 0;
+	tv.tv_usec = SOCKET_TIMEOUT;
+	status = setsockopt(server_fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+	// status = setsockopt(server_fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(struct timeval));
+	// status = setsockopt(server_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(struct timeval));
+
+	if (status){
+		close(server_fd);
 		return e_return(-1, "Set Socket Option Error");
-		// pexit(1, "Set Socket Option Error");
+	}
 
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = INADDR_ANY;
@@ -63,24 +74,24 @@ int server_soc(int port){
 
 	status = bind(server_fd, (struct sockaddr*)&address, sizeof(address));
 
-	if(status < 0)
-		return e_return(-1, "Bind Error");
-		// pexit(1, "Bind Error");
+	if(status < 0){
+		close(server_fd);
+		return e_return(-1, "Bind Error (%d)", status);
+	}
 
 	status = listen(server_fd, 3);
 
-	if (status < 0) 
+	if (status < 0){
+		close(server_fd);
 		return e_return(-1, "Listen Error");
-		// pexit(1, "Listen Error");
+	}
 
 	new_socket = accept(server_fd, (struct sockaddr*)&address, &addrlen);
 
-	if (new_socket < 0)
+	if (new_socket < 0){
+		close(server_fd);
 		return e_return(-1, "Accept Error");
-		// pexit(1, "Accept Error");
-
-
-	close(server_fd);   // closing the listening socket
+	}
 
 	return new_socket;
 }

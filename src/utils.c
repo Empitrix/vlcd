@@ -2,6 +2,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "structs.h"
 
 /* pexit: program exit: exit the program with a return code and message */
