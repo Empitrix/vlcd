@@ -21,7 +21,7 @@ void rtextf_rect(SDL_Renderer *rend, TTF_Font* font, char* text, int size, SDL_R
 }
 
 
-void sdl_init_win(int width, int height, void (*sdloop)(SDL_Window*, SDL_Renderer*, TTF_Font*, SDL_Event *, TCPsocket*)) {
+void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 	if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
 		pexit(1, "Failed: %s\n", SDL_GetError());
@@ -96,11 +96,19 @@ void sdl_init_win(int width, int height, void (*sdloop)(SDL_Window*, SDL_Rendere
 			}
 		}
 
-		if((client = SDLNet_TCP_Accept(server)))
-			sdloop(win, rend, font, &event, &client);
-		else
-			sdloop(win, rend, font, &event, NULL);
+		// win, rend, font, event, soc
+		struct LoopEvent le;
+		le.win = win;
+		le.rend = rend;
+		le.font = font;
+		le.event = &event;
 
+		if((client = SDLNet_TCP_Accept(server)))
+			le.soc = &client;
+		else
+			le.soc = NULL;
+
+		sdloop(le);
 
 		free(client);
 
