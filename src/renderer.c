@@ -1,8 +1,15 @@
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_net.h>
 #include <SDL2/SDL_ttf.h>
+#include <stdio.h>
 #include "rules.h"
 #include "utils.h"
+
+void sdl_cls(SDL_Renderer *rend);
+void sdl_set(SDL_Renderer *rend);
+void sdl_end(SDL_Renderer *rend);
+
 
 /* Render Text */
 void rtextf_rect(SDL_Renderer *rend, TTF_Font* font, char* text, int size, SDL_Rect rect, SDL_Color color){
@@ -14,7 +21,7 @@ void rtextf_rect(SDL_Renderer *rend, TTF_Font* font, char* text, int size, SDL_R
 }
 
 
-void sdl_init_win(int width, int height, void (*sdloop)(SDL_Window*, SDL_Renderer*, TTF_Font*, SDL_Event *)) {
+void sdl_init_win(int width, int height, void (*sdloop)(SDL_Window*, SDL_Renderer*, TTF_Font*, SDL_Event *, TCPsocket*)) {
 
 	if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
 		pexit(1, "Failed: %s\n", SDL_GetError());
@@ -24,19 +31,45 @@ void sdl_init_win(int width, int height, void (*sdloop)(SDL_Window*, SDL_Rendere
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		width, height, 0);
 
+
+	if(SDLNet_Init() == -1) {
+		fprintf(stderr, "ER: SDLNet_Init: %sn", SDLNet_GetError());
+		exit(-1);
+	}
+
 	SDL_Renderer* rend = SDL_CreateRenderer(
 		win, -1, SDL_RENDERER_ACCELERATED);
 
 	// FONT
 	TTF_Init();
-	// TTF_Font *font = TTF_OpenFont("./assets/poppins.ttf", FONTSIZ);
 	TTF_Font *font = TTF_OpenFont("./assets/roboto.ttf", FONTSIZ);
-	// TTF_Font *font = TTF_OpenFont("./assets/vcr.ttf", FONTSIZ);
 
 
 	if(font == NULL)
 		pexit(1, "TTF Failed: %s\n", TTF_GetError());
 
+
+	IPaddress ip;
+	TCPsocket server, client;
+	// TCPsocket server;
+
+	// TCPsocket *client;
+	// SDLNet_ResolveHost(&ip,"127.0.0.1", pport);
+
+	// if (SDLNet_ResolveHost(&ip,"127.0.0.1", pport) == -1) {
+	if (SDLNet_ResolveHost(&ip, NULL, pport) == -1) {
+		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
+		exit(1);
+	}
+
+	server = SDLNet_TCP_Open(&ip);
+	if (!server) {
+		printf("SDLNet_TCP_Open: %s\n", SDLNet_GetError());
+		exit(2);
+	}
+
+
+	int granted = 0;
 
 	while(running){
 		SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
@@ -63,17 +96,23 @@ void sdl_init_win(int width, int height, void (*sdloop)(SDL_Window*, SDL_Rendere
 			}
 		}
 
-		SDL_PollEvent(&event);
+		if((client = SDLNet_TCP_Accept(server)))
+			sdloop(win, rend, font, &event, &client);
+		else
+			sdloop(win, rend, font, &event, NULL);
 
-		sdloop(win, rend, font, &event);
+
+		free(client);
 
 		SDL_RenderPresent(rend);
 		SDL_Delay(FPS);
 	}
 
+
 	SDL_DestroyWindow(win);
 	SDL_Quit();
 }
+
 
 
 void sdl_cls(SDL_Renderer *rend){
@@ -83,5 +122,10 @@ void sdl_cls(SDL_Renderer *rend){
 
 void sdl_set(SDL_Renderer *rend){
 	SDL_RenderPresent(rend);
+}
+
+void sdl_end(SDL_Renderer *rend){
+	SDL_RenderPresent(rend);
+	SDL_Delay(FPS);
 }
 

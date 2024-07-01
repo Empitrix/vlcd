@@ -51,8 +51,6 @@ int server_soc(int port){
 		close(server_fd);
 		return e_return(-1, "Socket Error");
 	}
-		// pexit(1, "Socket Error");
-
 	// Forcefully attaching socket to the port 8080
 	// status = setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
 
@@ -60,8 +58,6 @@ int server_soc(int port){
 	tv.tv_sec = 0;
 	tv.tv_usec = SOCKET_TIMEOUT;
 	status = setsockopt(server_fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
-	// status = setsockopt(server_fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(struct timeval));
-	// status = setsockopt(server_fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(struct timeval));
 
 	if (status){
 		close(server_fd);
@@ -93,6 +89,7 @@ int server_soc(int port){
 		return e_return(-1, "Accept Error");
 	}
 
+	close(server_fd);
 	return new_socket;
 }
 

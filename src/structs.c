@@ -7,6 +7,12 @@ struct InitRes{
 };
 
 
+struct SSOC{
+	int fd;
+	int server;
+};
+
+
 enum COLOR_MODE{MONO, FULL};
 
 

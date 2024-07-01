@@ -23,7 +23,7 @@ int e_return(int ecode, char *format, ...){
 	va_start(args, format);
 	vsprintf(msg, format, args);
 	va_end(args);
-	printf("%s\n", msg);
+	// printf("%s\n", msg);
 	return ecode;
 }
 
