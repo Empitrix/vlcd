@@ -43,8 +43,8 @@ struct INIT_COMM {
 struct FRAME_COMM {
 	int x, y;
 	int width, height;
-	int color[3];
-	enum COLOR_MODE mode;
+	SDL_Color full_color;
+	SDL_Color mono_color;
 	int ecode;  // exit code
 };
 

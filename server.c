@@ -20,6 +20,7 @@ int main(int argc, char *argv[]){
 	return 0;
 }
 
+int is_mono = 0;
 
 char msg[MAX_TRANSITION];
 
@@ -40,8 +41,26 @@ void sdloop(struct LoopEvent le){
 					printf("width: %d\n", c.init.width);
 					printf("height: %d\n\n", c.init.height);
 					printf("color mode: %s\n\n", c.init.mode == 0 ? "MONO" : "FULL");
+					is_mono = c.init.mode == 0 ? 1 : 0;
 				} else
 					printf("Command 1 (INIT) is broken\n");
+			} else if(c.type == FRAME){
+				if(c.frame.ecode == 0){
+					printf("COMMAND 2, FRAME: \n");
+					printf("x: %d\n", c.frame.x);
+					printf("y: %d\n", c.frame.y);
+					printf("width: %d\n", c.frame.width);
+					printf("height: %d\n\n", c.frame.height);
+					if(is_mono)
+						printf("MONO R,G,B: %d\n\n", c.frame.mono_color.r);
+					else{
+						printf("full R: %d\n", c.frame.full_color.r);
+						printf("full G: %d\n", c.frame.full_color.g);
+						printf("full B: %d\n\n", c.frame.full_color.b);
+					}
+				}
+				else 
+					printf("Command 2 (FRAME) is broken\n");
 			} else if(c.type == FILL){
 				if(c.fill.ecode == 0){
 					printf("COMMAND 3, FILL: \n");
