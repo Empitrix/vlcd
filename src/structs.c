@@ -27,32 +27,37 @@ struct LoopEvent {
 };
 
 
+enum COMMANDS { INIT, FRAME, FILL, READ, NONE };
 
-enum COLOR_MODE{MONO, FULL};
+enum COLOR_MODE { MONO, FULL };
 
-struct COMMAND_ONE {
+// initialize window
+struct INIT_COMM {
 	SDL_Color bg_color;
 	int width, height;
 	enum COLOR_MODE mode;
 	int ecode;  // exit code
 };
 
-struct COMMAND_TWO {
+// set a frame
+struct FRAME_COMM {
 	int x, y;
 	int width, height;
 	int color[3];
+	enum COLOR_MODE mode;
 	int ecode;  // exit code
 };
 
-struct COMMAND_THREE {
+// fill canvas
+struct FILL_COMM {
 	SDL_Color color;
 	int ecode;  // exit code
 };
 
 struct COMMAND {
-	struct COMMAND_ONE c_one;
-	struct COMMAND_TWO c_two;
-	struct COMMAND_THREE c_three;
-	int id;
+	struct INIT_COMM init;
+	struct FRAME_COMM frame;
+	struct FILL_COMM fill;
+	enum COMMANDS type;
 };
 

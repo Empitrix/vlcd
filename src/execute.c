@@ -1,31 +1,32 @@
 #include "structs.h"
 #include <stdio.h>
 #include <string.h>
-#include "get/one.c"
+
+#include "commands/init.c"
+#include "commands/frame.c"
+#include "commands/fill.c"
 
 struct COMMAND get_command(char *data){
-	struct COMMAND com; com.id = 0;
+	struct COMMAND com;
+	com.type = NONE;
+
 	int c;
-
 	c = data[0];
-	com.id = (c >= 'A' && c <= 'D' ) ? (c - 'A') + 1 : -1;
+	com.type = (c >= 'A' && c <= 'D' ) ? (c - 'A') : -1;
 
-	struct COMMAND_ONE command;
-
-	// printf(">%s<", ord);
-
-
-	switch (com.id) {
-		case 1:
-			// command
-			com.c_one = get_command_one(data);
-			// com.c_one = get_command_one(ord);
+	switch (com.type) {
+		case INIT:
+			com.init = get_init_comm(data);
 			break;
-		case 2:
+		case FRAME:
+			com.frame = get_frame_comm(data);
 			break;
-		case 3:
+		case FILL:
+			com.fill = get_fill_comm(data);
 			break;
-		case 4:
+		case READ:
+			if((int)strlen(data) != 1)
+				com.type = NONE;
 			break;
 		default: break;
 	}

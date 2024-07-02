@@ -6,6 +6,8 @@ int running = 1;
 
 #define MAX_TRANSITION 1024
 
+#define ALPHA 255
+
 
 // server file descriptor
 // int sfd = 0;
