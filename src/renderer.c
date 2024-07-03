@@ -1,6 +1,8 @@
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_image.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_net.h>
+#include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_ttf.h>
 #include <stdio.h>
 #include "rules.h"
@@ -133,5 +135,27 @@ void sdl_set(SDL_Renderer *rend){
 void sdl_end(SDL_Renderer *rend){
 	SDL_RenderPresent(rend);
 	SDL_Delay(FPS);
+}
+
+
+/* Loading Animation */
+static int current = 1;
+static int wait = 0;
+// Render Image
+void loading_anim(SDL_Renderer* rend){
+	char path[100];
+	sprintf(path, "./assets/wifi/png/%d.png", current);
+	SDL_Texture *img;
+	SDL_Rect rect;
+	rect = (SDL_Rect){0, 0, 200, 200};
+	img = IMG_LoadTexture(rend, path);
+	SDL_RenderCopy(rend, img, NULL, &rect);
+	if(wait > 50){
+		current++;
+		wait = 0;
+	}
+	if(current > 4)
+		current = 1;
+	wait++;
 }
 

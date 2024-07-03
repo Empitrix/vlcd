@@ -6,6 +6,7 @@
 #include "src/canvas.h"
 #include "src/execute.h"
 #include <SDL2/SDL_net.h>
+#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 #include <stdio.h>
 #include <string.h>
@@ -18,17 +19,15 @@ void sdloop(struct LoopEvent);
 int main(int argc, char *argv[]){
 	struct InitRes ires = get_init_res(argc, argv);
 	pport = ires.port;
-	// canvas = (struct CANVAS){0, 0, 0, {}};
-	sdl_init_win(200, 80, sdloop);
+	sdl_init_win(200, 200, sdloop);
 	return 0;
 }
 
 
 void sdloop(struct LoopEvent le){
 
-	if(canvas.initialized == 0){
-		rtextf_rect(le.rend, le.font, "Waiting...", FONTSIZ, (SDL_Rect){10,0, 180, 50}, (SDL_Color){0, 0, 0, ALPHA});
-	}
+	if(canvas.initialized == 0)
+		loading_anim(le.rend);
 
 	if(le.soc != NULL){
 		char msg[MAX_TRANSITION];
