@@ -64,7 +64,7 @@ struct INIT_COMM get_init_comm(char ord[]){
 		++i;
 	}
 
-	com.bg_color = (SDL_Color){red, green, blue, ALPHA};
+	com.color = (SDL_Color){red, green, blue, ALPHA};
 	com.ecode = 0;
 	return com;
 }

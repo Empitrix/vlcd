@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <string.h>
 #include "src/sockets.h"
 #include "src/rules.h"
 
@@ -20,9 +21,14 @@ int main(int argc, char *argv[]){
 	if(soc == -1)
 		return 0;
 
-	// if(send(soc, argv[1], strlen(argv[1]), 0) > 0)
-	if(send(soc, argv[1], MAX_TRANSITION, 0) > 0)
-		printf("SENT!");
+	if(!(send(soc, argv[1], MAX_TRANSITION, 0) > 0))
+		printf("ERROR on sending informations\n");
+
+	if(strcmp(argv[1], "D") == 0){
+		char msg[MAX_TRANSITION];
+		read(soc, msg, MAX_TRANSITION);
+		printf("Result:\n---------------\n%s", msg);
+	}
 
 	close(soc);
 

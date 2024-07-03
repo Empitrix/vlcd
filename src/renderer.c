@@ -4,6 +4,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <stdio.h>
 #include "rules.h"
+#include "canvas.h"
 #include "utils.h"
 
 void sdl_cls(SDL_Renderer *rend);
@@ -42,7 +43,8 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 	// FONT
 	TTF_Init();
-	TTF_Font *font = TTF_OpenFont("./assets/roboto.ttf", FONTSIZ);
+	// TTF_Font *font = TTF_OpenFont("./assets/roboto.ttf", FONTSIZ);
+	TTF_Font *font = TTF_OpenFont("./assets/HNFMR.ttf", FONTSIZ);
 
 
 	if(font == NULL)
@@ -51,12 +53,7 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 	IPaddress ip;
 	TCPsocket server, client;
-	// TCPsocket server;
 
-	// TCPsocket *client;
-	// SDLNet_ResolveHost(&ip,"127.0.0.1", pport);
-
-	// if (SDLNet_ResolveHost(&ip,"127.0.0.1", pport) == -1) {
 	if (SDLNet_ResolveHost(&ip, NULL, pport) == -1) {
 		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
 		exit(1);
@@ -72,7 +69,8 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 	int granted = 0;
 
 	while(running){
-		SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+		SDL_Color bg = canvas.color;
+		SDL_SetRenderDrawColor(rend, bg.r, bg.g, bg.b, bg.a);
 		SDL_RenderClear(rend);
 
 		SDL_Event event;

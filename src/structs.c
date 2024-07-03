@@ -3,6 +3,7 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
+#include "rules.h"
 
 
 /* Initial Respone: scale & port from argument list */
@@ -33,7 +34,7 @@ enum COLOR_MODE { MONO, FULL };
 
 // initialize window
 struct INIT_COMM {
-	SDL_Color bg_color;
+	SDL_Color color;
 	int width, height;
 	enum COLOR_MODE mode;
 	int ecode;  // exit code
