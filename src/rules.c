@@ -10,4 +10,5 @@ int running = 1;
 
 // public port
 int pport = 0;
+int pscale = 1;
 

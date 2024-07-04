@@ -17,6 +17,8 @@ char *gline(){
 
 int main(int argc, char *argv[]){
 
+
+	
 	int soc = client_soc(8080);
 	if(soc == -1)
 		return 0;

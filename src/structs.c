@@ -23,10 +23,15 @@ struct LoopEvent {
 	SDL_Window *win;
 	SDL_Renderer *rend;
 	TTF_Font *font;
-	SDL_Event *event;
+	// SDL_Event event;
+	int changed;
 	TCPsocket *soc;
 };
 
+struct SCREEN_SIZE {
+	int height;
+	int width;
+};
 
 enum COMMANDS { INIT, FRAME, FILL, READ, NONE };
 

@@ -1,7 +1,9 @@
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_keycode.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_net.h>
+#include <SDL2/SDL_scancode.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_ttf.h>
 #include <stdio.h>
@@ -68,12 +70,15 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 	}
 
 
-	int granted = 0;
+	int shift = 0;
+	int changed = 0;
 
 	while(running){
 		SDL_Color bg = canvas.color;
 		SDL_SetRenderDrawColor(rend, bg.r, bg.g, bg.b, bg.a);
 		SDL_RenderClear(rend);
+
+		changed = 0;
 
 		SDL_Event event;
 
@@ -89,6 +94,27 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 							running = 0;
 							break;
 
+						case SDL_SCANCODE_MINUS:
+							if(pscale - 1 >= 1){
+								pscale--;
+								changed = 1;
+							}
+							break;
+
+						case SDL_SCANCODE_EQUALS:
+							if(shift)
+								if(pscale + 1 <= 8 && change_access(canvas.win_width * (pscale + 1), canvas.win_height * (pscale + 1)) ){
+									pscale++;
+									changed = 1;
+								}
+							break;
+
+						default: break;
+					}
+
+					shift = 0;
+					switch (event.key.keysym.sym){
+						case SDLK_RSHIFT: case SDLK_LSHIFT: shift = 1; break;
 						default: break;
 					}
 
@@ -96,12 +122,14 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 			}
 		}
 
+
 		// win, rend, font, event, soc
 		struct LoopEvent le;
 		le.win = win;
 		le.rend = rend;
 		le.font = font;
-		le.event = &event;
+		le.changed = changed;
+		// le.event = event;
 
 		if((client = SDLNet_TCP_Accept(server)))
 			le.soc = &client;
@@ -119,22 +147,6 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 	SDL_DestroyWindow(win);
 	SDL_Quit();
-}
-
-
-
-void sdl_cls(SDL_Renderer *rend){
-	SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
-	SDL_RenderClear(rend);
-}
-
-void sdl_set(SDL_Renderer *rend){
-	SDL_RenderPresent(rend);
-}
-
-void sdl_end(SDL_Renderer *rend){
-	SDL_RenderPresent(rend);
-	SDL_Delay(FPS);
 }
 
 
