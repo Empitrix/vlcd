@@ -34,7 +34,7 @@ int main(int argc, char *argv[]){
 
 	close(soc);
 
-	putchar('\n');
+	// putchar('\n');
 	return 0;
 }
 
