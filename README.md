@@ -12,7 +12,10 @@ Currently there is 4 commands:
 > [!WARNING]
 > There is no space is commands
 
+Also by pressing `q` you close the program.
+
 ---
+
 ### Initialize
 The startling letter for initialization is `A` followed by `RED value`, `GREEN value`, `BLUE value` and `WIDTH`, `HEIGHT` for size and lastly `0` or `1` for color mode; `0` means its **MONO** color and `1` means it's **FULL** color:
 
