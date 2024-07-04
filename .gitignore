@@ -8,5 +8,6 @@
 
 # directories
 dist/
+build/
 
 /.clangd
