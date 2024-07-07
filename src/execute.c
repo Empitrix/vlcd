@@ -19,9 +19,6 @@ struct COMMAND get_command(char data[]){
 		case INIT:
 			com.init = get_init_comm(data);
 			break;
-		case FILL:
-			com.fill = get_fill_comm(data);
-			break;
 
 		case FRAME:
 			com.frame = get_frame_comm(data);
@@ -31,10 +28,15 @@ struct COMMAND get_command(char data[]){
 			com.spixel = get_spixel_comm(data);
 			break;
 
+		case FILL:
+			com.fill = get_fill_comm(data);
+			break;
+
 		case READ:
 			if((int)strlen(data) != 1)
 				com.type = NONE;
 			break;
+
 		default: break;
 	}
 

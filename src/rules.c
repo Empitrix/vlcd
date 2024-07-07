@@ -6,7 +6,8 @@ int running = 1;
 #define MAX_TRANSITION 1024
 #define ALPHA 255
 
-#define MAXFRAME 1000
+// #define MAXFRAME 1000
+#define MAXFRAME 1024
 
 
 #define MONOKLR (SDL_Color){255, 255, 255, 255}

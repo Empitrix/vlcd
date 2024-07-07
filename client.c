@@ -22,8 +22,8 @@ int send_msg(char arr[]){
 int main(int argc, char *argv[]){
 	int s;
 
-	printf("INIT...\n");
-	//                           COMM    RED     GREEN   BLUE    Wa      Wb      Ha      Hb      MODE
+	printf("INIT (COLOR FULL)...\n");
+	//                 COMM    RED     GREEN   BLUE    Wa      Wb      Ha      Hb      MODE
 	char init[1024] = {'\x01', '\xFF', '\xFF', '\xFF', '\x01', '\x90', '\x01', '\x90', '\x01'};
 	if((s = send_msg(init)) == -1){ pexit(1, "ERR"); }
 	sleep(1);
@@ -45,12 +45,18 @@ int main(int argc, char *argv[]){
 	sleep(1);
 	close(s);
 
-	// printf("FRAME...\n");
-	// //                   COMM    Xa      Xb      Ya      Yb      R       G       B
-	// char frame[1024] = {'\x03', '\x00', '\xC8', '\x00', '\xC8', '\x00', '\x00', '\xFF'};
-	// if((s = send_msg(frame)) == -1){ pexit(1, "ERR"); }
-	// sleep(1);
-	// close(s);
+
+	printf("FRAME at [250, 250] - 2 x 2 (FULL-COLOR)...\n");
+	//                   COMM    Xa      Xb      Ya      Yb      Wa      Wb     Ha      Hb
+	char frame[1024] = {'\x02', '\x00', '\xFA', '\x00', '\xFA', '\x00', '\x02', '\x00', '\x02',
+		'\xff', '\x00', '\x00',  // RED   Color 
+		'\x00', '\xff', '\x00',  // GREEN Color 
+		'\x00', '\x00', '\xff',  // BLUE  Color 
+		'\xff', '\xff', '\xff',  // WHITE Color 
+	};
+	if((s = send_msg(frame)) == -1){ pexit(1, "ERR"); }
+	sleep(1);
+	close(s);
 
 	/*
 	printf("READING: \n");

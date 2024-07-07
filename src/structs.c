@@ -33,7 +33,15 @@ struct SCREEN_SIZE {
 	int width;
 };
 
-enum COMMANDS { INIT, FRAME, SPIXEL, FILL, READ, NONE };
+
+enum COMMANDS {
+	INIT,
+	FRAME,
+	SPIXEL,
+	FILL,
+	READ,
+	NONE
+};
 
 enum COLOR_MODE { MONO, FULL };
 
@@ -56,8 +64,7 @@ struct SPIXEL_COMM {
 struct FRAME_COMM {
 	int x, y;
 	int width, height;
-	SDL_Color full_color;
-	SDL_Color mono_color;
+	SDL_Color data[MAXFRAME];
 	int ecode;  // exit code
 };
 
