@@ -51,18 +51,28 @@ void render_canvas(struct LoopEvent le){
 		r.x = canvas.frames[i].x * pscale;
 		r.y = canvas.frames[i].y * pscale;
 
+		int loop_count;
+		loop_count = canvas.frames[i].width * canvas.frames[i].height;
+
 		r.w = canvas.frames[i].width * pscale;
 		r.h = canvas.frames[i].height * pscale;
 
-		for(int j = 0, height = 0, width = 0; j < (r.w * r.h); ++j){
+		SDL_SetRenderDrawColor(le.rend, empty.r, empty.g, empty.b, empty.a);
+		SDL_RenderFillRect(le.rend, &r);
+
+		for(int j = 0, height = 0, width = 0; j < loop_count; ++j){
 			SDL_Color klr = canvas.frames[i].data[j];
 			SDL_Rect rect;
-			rect.x = r.x + width;
-			rect.y = r.y + height;
+
+			rect.x = r.x + (width * pscale);
+			rect.y = r.y + (height * pscale);
+
+			// rect.x *= pscale;
+			// rect.y *= pscale;
 
 			rect.w = rect.h = 1 * pscale;
 
-			if((j + 1) % r.w == 0){
+			if((j + 1) % canvas.frames[i].width == 0){
 				height++;
 				width = 0;
 			} else
@@ -72,6 +82,7 @@ void render_canvas(struct LoopEvent le){
 			SDL_RenderFillRect(le.rend, &rect);
 		}
 	}
+
 
 	// draw pixels
 	for(i = 0; i < canvas.pidx; ++i){
