@@ -5,36 +5,65 @@
 #include "src/sockets.h"
 #include "src/rules.h"
 
-char *gline(){
-	char *ll = malloc(sizeof(char));
-	int i, c;
-	i = 0;
-	while((c = getchar()) != '\n' || c != '\0')
-		ll[i++] = c;
-	ll[i] = '\0';
-	return ll;
+#define SOCPORT 8080
+
+
+int send_msg(char arr[]){
+	int soc = client_soc(SOCPORT);
+	if(soc == -1)
+		return -1;
+
+	if(!(send(soc, arr, MAX_TRANSITION, 0) > 0))
+		printf("ERROR on sending informations\n");
+
+	return soc;
 }
 
 int main(int argc, char *argv[]){
+	int s;
+
+	printf("INIT...\n");
+	//                           COMM    RED     GREEN   BLUE    Wa      Wb      Ha      Hb      MODE
+	char init[1024] = {'\x01', '\xFF', '\xFF', '\xFF', '\x01', '\x90', '\x01', '\x90', '\x01'};
+	if((s = send_msg(init)) == -1){ pexit(1, "ERR"); }
+	sleep(1);
+	close(s);
 
 
-	
-	int soc = client_soc(8080);
-	if(soc == -1)
-		return 0;
+	printf("Fill...\n");
+	//                  COMM    RED     GREEN   BLUE
+	char fill[1024] = {'\x04', '\x00', '\xFF', '\x00'};
+	if((s = send_msg(fill)) == -1){ pexit(1, "ERR"); }
+	sleep(1);
+	close(s);
 
-	if(!(send(soc, argv[1], MAX_TRANSITION, 0) > 0))
-		printf("ERROR on sending informations\n");
 
-	if(strcmp(argv[1], "D") == 0){
-		char msg[MAX_TRANSITION];
-		read(soc, msg, MAX_TRANSITION);
-		printf("Result:\n---------------\n%s", msg);
-	}
+	printf("SPIXEL...\n");
+	//                   COMM    Xa      Xb      Ya      Yb      R       G       B
+	char spixel[1024] = {'\x03', '\x00', '\xC8', '\x00', '\xC8', '\x00', '\x00', '\xFF'};
+	if((s = send_msg(spixel)) == -1){ pexit(1, "ERR"); }
+	sleep(1);
+	close(s);
 
-	close(soc);
+	// printf("FRAME...\n");
+	// //                   COMM    Xa      Xb      Ya      Yb      R       G       B
+	// char frame[1024] = {'\x03', '\x00', '\xC8', '\x00', '\xC8', '\x00', '\x00', '\xFF'};
+	// if((s = send_msg(frame)) == -1){ pexit(1, "ERR"); }
+	// sleep(1);
+	// close(s);
 
-	// putchar('\n');
+	/*
+	printf("READING: \n");
+	char r[1024] = {'\x05'};
+	if((s = send_msg(r)) == -1){ pexit(1, "ERR"); }
+	sleep(1);
+	char msg[MAX_TRANSITION];
+	read(s, msg, MAX_TRANSITION);
+	printf("Result:\n---------------\n>%s<", msg);
+	close(s);
+	*/
+
+
 	return 0;
 }
 

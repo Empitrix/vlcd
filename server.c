@@ -11,6 +11,7 @@
 #include "src/exec/frame.h"
 #include "src/exec/fill.h"
 #include "src/exec/read.h"
+#include "src/exec/spixel.h"
 
 void sdloop(struct LoopEvent);
 
@@ -36,14 +37,21 @@ void sdloop(struct LoopEvent le){
 
 			if(c.type == INIT && c.init.ecode == 0)
 				init_exec(le, c.init);    // Initialize the window
+
 			else if(c.type == FRAME && c.frame.ecode == 0 && canvas.initialized)
 				frame_exec(le, c.frame);  // Setup a frame
+
+			else if(c.type == SPIXEL && c.spixel.ecode == 0 && canvas.initialized)
+				spixel_exec(le, c.spixel);  // Set a pixel by current scale
+
 			// Fill the canvas
 			else if(c.type == FILL && c.fill.ecode == 0 && canvas.initialized)
 				fill_exec(le, c.fill);    // Fill the canvas
+
 			else if(c.type == READ)
 				read_exec(le, c.fill);    // Read data and send them back
 		}
+		memset(msg, 0, MAX_TRANSITION);  // clear
 	}
 
 

@@ -10,18 +10,22 @@ struct FRAME {
 struct CANVAS {
 	int initialized;                // is initialized
 	int fidx;                       // total frames length
+	int pidx;                       // total pixels length
 	int mono;                       // is mono color
 	int win_width;                  // is mono color
 	int win_height;                 // is mono color
 	SDL_Color color;
 	struct FRAME frames[MAXFRAME];  // frames
+	struct SPIXEL_COMM pixels[MAXFRAME];  // frames
 };
 
 
-struct CANVAS canvas = {0, 0, 0, 200, 200, (SDL_Color){255, 255, 255, 255}, {}};
+struct CANVAS canvas = {0, 0, 0, 0, 200, 200, (SDL_Color){255, 255, 255, 255}, {}, {}};
+
 
 void render_canvas(struct LoopEvent le){
 	int i;
+	// frames
 	for(i = 0; i < canvas.fidx; ++i){
 		SDL_Color k;
 		SDL_Rect r;
@@ -37,5 +41,20 @@ void render_canvas(struct LoopEvent le){
 		SDL_SetRenderDrawColor(le.rend, k.r, k.g, k.b, k.a);
 		SDL_RenderFillRect(le.rend, &r);
 	}
+
+
+	for(i = 0; i < canvas.pidx; ++i){
+		SDL_Color k;
+		SDL_Rect r;
+		k = canvas.pixels[i].color;
+
+		r.w = r.h = 1 * pscale;
+		r.x = canvas.pixels[i].x;
+		r.y = canvas.pixels[i].x;
+
+		SDL_SetRenderDrawColor(le.rend, k.r, k.g, k.b, k.a);
+		SDL_RenderFillRect(le.rend, &r);
+	}
+
 }
 

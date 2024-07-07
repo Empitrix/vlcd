@@ -93,3 +93,16 @@ int change_access(int w, int h){
 	}
 	return 0;
 }
+
+
+/* Hexadecimal converter */
+
+int ghex(char c){ return (unsigned char)c; }  // get hex from char
+
+// merge two hex
+int hexm(int primary, int secondary){
+	unsigned int a = (unsigned char)primary;
+	unsigned int b = (unsigned char)secondary;
+	return (int)(a << 8) | b;
+}
+

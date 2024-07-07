@@ -33,7 +33,7 @@ struct SCREEN_SIZE {
 	int width;
 };
 
-enum COMMANDS { INIT, FRAME, FILL, READ, NONE };
+enum COMMANDS { INIT, FRAME, SPIXEL, FILL, READ, NONE };
 
 enum COLOR_MODE { MONO, FULL };
 
@@ -42,6 +42,13 @@ struct INIT_COMM {
 	SDL_Color color;
 	int width, height;
 	enum COLOR_MODE mode;
+	int ecode;  // exit code
+};
+
+// set a frame
+struct SPIXEL_COMM {
+	int x, y;
+	SDL_Color color;
 	int ecode;  // exit code
 };
 
@@ -63,6 +70,7 @@ struct FILL_COMM {
 struct COMMAND {
 	struct INIT_COMM init;
 	struct FRAME_COMM frame;
+	struct SPIXEL_COMM spixel;
 	struct FILL_COMM fill;
 	enum COMMANDS type;
 };

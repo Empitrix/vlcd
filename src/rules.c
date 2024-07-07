@@ -8,6 +8,9 @@ int running = 1;
 
 #define MAXFRAME 1000
 
+
+#define MONOKLR (SDL_Color){255, 255, 255, 255}
+
 // public port
 int pport = 0;
 int pscale = 1;
