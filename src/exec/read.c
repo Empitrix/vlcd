@@ -5,7 +5,6 @@
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_video.h>
 #include <stdio.h>
-#include <sys/socket.h>
 
 #define CAPTURE_BLANK 0
 #define CAPTURE_PIXEL 0

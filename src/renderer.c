@@ -11,6 +11,8 @@
 #include "canvas.h"
 #include "utils.h"
 
+#include <string.h>
+
 void sdl_cls(SDL_Renderer *rend);
 void sdl_set(SDL_Renderer *rend);
 void sdl_end(SDL_Renderer *rend);

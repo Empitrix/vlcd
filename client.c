@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <string.h>
 #include "src/sockets.h"
 #include "src/rules.h"
 
