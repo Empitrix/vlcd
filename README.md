@@ -89,6 +89,18 @@ chmod +x ./compile.sh
 ./compile.sh
 ```
 
+or you can use `Makefile` to compile for Windows or Linux.
+for compiling the program for **WINDOWS** you can use following steps:
+```bash
+./install.ps1
+make windows
+```
+
+for compiling the program for **LINUX** you can use following steps:
+```bash
+make linux
+```
+
 Two file `client.out` and `server.out` will be created.
 
 ## Run
