@@ -38,6 +38,7 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		width, height, 0);
 
+	SDL_SetWindowAlwaysOnTop(win, 1);
 
 	if(SDLNet_Init() == -1) {
 		fprintf(stderr, "ER: SDLNet_Init: %sn", SDLNet_GetError());
