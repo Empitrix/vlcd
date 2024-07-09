@@ -58,16 +58,14 @@ int main(int argc, char *argv[]){
 	sleep(1);
 	close(s);
 
-	/*
 	printf("READING: \n");
 	char r[1024] = {'\x05'};
 	if((s = send_msg(r)) == -1){ pexit(1, "ERR"); }
 	sleep(1);
-	char msg[MAX_TRANSITION];
-	read(s, msg, MAX_TRANSITION);
-	printf("Result:\n---------------\n>%s<", msg);
-	close(s);
-	*/
+	// char msg[MAX_TRANSITION];
+	// read(s, msg, MAX_TRANSITION);
+	// printf("Result:\n---------------\n>%s<", msg);
+	// close(s);
 
 
 	return 0;

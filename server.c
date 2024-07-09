@@ -48,8 +48,8 @@ void sdloop(struct LoopEvent le){
 			else if(c.type == FILL && c.fill.ecode == 0 && canvas.initialized)
 				fill_exec(le, c.fill);    // Fill the canvas
 
-			else if(c.type == READ)
-				read_exec(le, c.fill);    // Read data and send them back
+			else if(c.type == READ && canvas.initialized)
+				read_exec(le);    // Read data and send them back
 		}
 		memset(msg, 0, MAX_TRANSITION);  // clear
 	}

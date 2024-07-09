@@ -156,7 +156,7 @@ static int wait = 0;
 // Render Image
 void loading_anim(SDL_Renderer* rend){
 	char path[100];
-	sprintf(path, "./assets/wifi/png/%d.png", current);
+	sprintf(path, "./assets/wifi/svg/%d.svg", current);
 	SDL_Texture *img;
 	SDL_Rect rect;
 	rect = (SDL_Rect){0, 0, 200, 200};

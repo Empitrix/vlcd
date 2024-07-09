@@ -7,7 +7,8 @@
 
 /* pexit: program exit: exit the program with a return code and message */
 void pexit(int ecode, char *format, ...){
-	char *msg = malloc(sizeof(char *));
+	// char *msg = malloc(sizeof(char *));
+	char *msg = malloc(1000 * sizeof(char *));
 	va_list args;
 	va_start(args, format);
 	vsprintf(msg, format, args);
@@ -104,5 +105,43 @@ int hexm(int primary, int secondary){
 	unsigned int a = (unsigned char)primary;
 	unsigned int b = (unsigned char)secondary;
 	return (int)(a << 8) | b;
+}
+
+
+/* reverse */
+void reverse(char *s) {
+	int c;
+	char *t;
+
+	for (t = s + (strlen(s) - 1); s < t; s++, t--) {
+		// swap
+		c = *s;
+		*s = *t;
+		*t = c;
+	}
+}
+
+char *decimal_to_hex(int decn){
+
+	char *hexdigits = (char *)malloc(20 * sizeof(char *));
+
+	int tmp, idx;
+	idx = 0;
+
+	while (decn > 0) {
+		// Get remainder
+		tmp = decn % 16;
+		// Convert to hex digit
+		if (tmp < 10) {
+			hexdigits[idx] = tmp + '0';
+		} else {
+			hexdigits[idx] = tmp + 'A' - 10;
+		}
+		idx++;
+		decn = decn / 16;
+	}
+	hexdigits[idx] = '\0';
+	reverse(hexdigits);
+	return hexdigits;
 }
 

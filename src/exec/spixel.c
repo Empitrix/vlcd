@@ -11,7 +11,6 @@ void spixel_exec(struct LoopEvent le, struct SPIXEL_COMM spixel){
 		klr = spixel.color;
 
 	spixel.color = klr;
-	canvas.pixels[canvas.pidx] = spixel;
-	canvas.pidx++;
+	canvas.pixel = spixel;
 }
 
