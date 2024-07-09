@@ -71,6 +71,8 @@ COMM
 '\x05'
 ```
 
+The return data is an `char` array with size of `(width * height) * 7`, you can change the width and height (capture) in `./src/exec/read.c` to specify limits and the `7` is for (`Xa`, `Xb`, `Ya`, `Yb`, `R`, `G`, `B`) which is 7 memeber in total.
+
 
 ## Build
 You build the program yourself:
