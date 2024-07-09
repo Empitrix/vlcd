@@ -9,6 +9,10 @@ int running = 1;
 // #define MAXFRAME 1000
 #define MAXFRAME 1024
 
+// you can change this to '1' if you want to see data when reading command is executed
+// you can change this to '0' if you dont want to see data when reading command is executed
+#define DEBUG_MODE 1
+
 
 #define MONOKLR (SDL_Color){255, 255, 255, 255}
 

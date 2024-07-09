@@ -27,6 +27,14 @@ int e_return(int ecode, char *format, ...){
 	return ecode;
 }
 
+void printd(char *format, ...){
+	va_list args;
+	va_start(args, format);
+	if(DEBUG_MODE)
+		printf(format, args);
+	va_end(args);
+}
+
 /* get initial response: get flags from argument (user) */
 struct InitRes get_init_res(int argc, char *argv[]){
 	struct InitRes ires;
