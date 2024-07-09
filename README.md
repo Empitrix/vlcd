@@ -6,7 +6,7 @@ an remote display emulator via socket
 Currently there is 5 commands:
 - [Initialize](#initialize)
 - [Frame](#frame)
-- [set pixel][#set-pixel]
+- [set pixel](#set-pixel)
 - [Fill](#fill)
 - [Read](#read)
 
