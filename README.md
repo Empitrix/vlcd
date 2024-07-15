@@ -103,6 +103,48 @@ make linux
 
 Two file `client.out` and `server.out` will be created.
 
+
+## Compile Using CMake
+
+Requirements:
+- CMake
+
+### Linux
+
+Install SDL2 libraries:
+```bash
+#install sdl2
+sudo apt install libsdl2-dev libsdl2-2.0-0 -y;
+
+#install sdl image  - if you want to display images
+sudo apt install libjpeg-dev libwebp-dev libtiff5-dev libsdl2-image-dev libsdl2-image-2.0-0 -y;
+
+#install sdl mixer  - if you want sound
+sudo apt install libmikmod-dev libfishsound1-dev libsmpeg-dev liboggz2-dev libflac-dev libfluidsynth-dev libsdl2-mixer-dev libsdl2-mixer-2.0-0 -y;
+
+# install sdl true type fonts - if you want to use text
+sudo apt install libfreetype6-dev libsdl2-ttf-dev libsdl2-ttf-2.0-0 -y;
+
+# net
+sudo apt install libsdl2-net-2.0-0
+sudo apt install libsdl2-net-dev    
+
+```
+
+Compile:
+```bash
+git clone "https://github.com/empitrix/virtual_canvas"
+cd ./virtual_canvas
+
+mkdir build && cd ./build
+
+# run cmake:
+cmake ..
+cmake --build .
+```
+now in you have `./build/server` and `./build/client` in Linux
+
+
 ## Run
 To run the program you need to compile the program; after that, two files `server.out` and `client.out` will be created.
 
@@ -117,3 +159,6 @@ run the client:
 ```bash
 ./client.out
 ```
+
+
+

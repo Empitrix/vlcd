@@ -1,22 +1,49 @@
-cmake_minimum_required(VERSION 3.24)
-# find_package(SDL2 REQUIRED)
+cmake_minimum_required(VERSION 3.10)
 
 project(virtual_canvas)
 
-
-# Project
-set(SOURCE_FILES
-	server.c)
-
-# set(CMAKE_C_FLAGS
-# 	"`sdl2-config --cflags --libs` -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_net -lSDL2_ttf")
-
-# set(CMAKE_C_FLAGS
-# 	"`pkg-config --cflags --libs sdl2` -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_net -lSDL2_ttf")
-
-set(CMAKE_C_FLAGS
-	"`sdl2-config --cflags --libs sdl2` -lSDL2 -lSDL2_mixer -lSDL2_image -lSDL2_net -lSDL2_ttf")
+find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+find_package(SDL2_net REQUIRED)
 
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
+
+file(COPY
+	"${CMAKE_CURRENT_SOURCE_DIR}/assets/HNFMR.ttf" DESTINATION
+	"${CMAKE_CURRENT_BINARY_DIR}/assets")
+
+
+# Copy Assets
+list(APPEND SVGS_IDX 1 2 3 4)
+foreach(SVG IN LISTS SVGS_IDX)
+	file(COPY
+		"${CMAKE_CURRENT_SOURCE_DIR}/assets/wifi/svg/${SVG}.svg" DESTINATION
+		"${CMAKE_CURRENT_BINARY_DIR}/assets/wifi/svg/")
+endforeach()
+
+
+if(LINUX) 
+	set(SOURCES "server.c;client.c")
+elseif(WIN32)
+	# NOT WRITTEN YET
+	# set(SOURCES "server.c;win_client.c")
+endif()
+
+# Loop through each source file and make an executable
+foreach(source_file IN LISTS SOURCES)
+	# get element's name
+	get_filename_component(target_name ${source_file} NAME_WE)
+
+	add_executable("${target_name}" "${source_file}")
+
+	target_link_libraries("${target_name}" 
+		SDL2
+		SDL2main
+		SDL2_image
+		SDL2_ttf
+		SDL2_net
+	)
+endforeach()
+
