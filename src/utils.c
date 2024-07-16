@@ -117,6 +117,18 @@ int hexm(int primary, int secondary){
 }
 
 
+
+unsigned char first_h(int decimalNumber) {
+	return (decimalNumber >> 8) & 0xFF;
+}
+
+// Function to get the second hexadecimal byte (lower byte)
+unsigned char second_h(int decimalNumber) {
+	return decimalNumber & 0xFF;
+}
+
+
+
 /* reverse */
 void reverse(char *s) {
 	int c;
@@ -152,5 +164,91 @@ char *decimal_to_hex(int decn){
 	hexdigits[idx] = '\0';
 	reverse(hexdigits);
 	return hexdigits;
+}
+
+
+
+/* MOVEMENT BUFFER */
+
+/*
+ *
+code  is-down  is-shift  is-ctrl  m-key mxa   mxb    mya    myb 
+\x00  \x00     \x00      \x00     \x00  \x00  \x00   \x00   \x00
+
+*/
+
+
+enum KEY_STATE {
+	CODE_S,
+
+	IS_DOWN_S,
+
+	IS_SHIFT,
+	IS_CTRL,
+
+	MOSUE_KEY,
+
+	MOUSE_X,
+	MOUSE_Y,
+};
+
+static int movement_buffer[7];
+
+/* SEND TCP Keyboard */
+int update_movement_buffer(int state, enum KEY_STATE name){
+	movement_buffer[name] = state;
+	return state;
+}
+
+
+char *get_movement_buffer(){
+	char *buffer = (char *)malloc(9 * sizeof(char *));
+	buffer[0] = movement_buffer[0];  // key-code
+	buffer[1] = movement_buffer[1];  // is down
+	buffer[2] = movement_buffer[2];  // shift state
+	buffer[3] = movement_buffer[3];  // ctrl state
+	buffer[4] = movement_buffer[4];  // mosue-key state
+
+	buffer[5] = first_h(movement_buffer[5]);   // mosue-key state
+	buffer[6] = second_h(movement_buffer[5]);  // mosue-key state
+
+	buffer[7] = first_h(movement_buffer[6]);   // mosue-key state
+	buffer[8] = second_h(movement_buffer[6]);  // mosue-key state
+
+
+	printf(">");
+	// show
+	for(int i = 0; i < 8; i++){
+		// if(i < 6)
+		// 	movement_buffer[0] = '\x00';
+
+		if(i == 5 || i == 7)
+			printf(".");
+		if(buffer[i])
+			printf("-");
+		else
+			printf(" ");
+	}
+	printf("<\n");
+
+
+	printf("\nDATA:\n");
+	printf("key-code: %d\n", movement_buffer[0]);
+	printf("is down: %d\n", movement_buffer[1]);
+	printf("is shift: %d\n", movement_buffer[2]);
+	printf("is ctrl: %d\n", movement_buffer[3]);
+
+	printf("mouse key: %d\n", movement_buffer[4]);
+
+	printf("mouse x: %d\n", movement_buffer[5]);
+	printf("mouse y: %d\n", movement_buffer[6]);
+	printf("--------------------------\n");
+
+
+	movement_buffer[4] = 0;
+	movement_buffer[5] = 0;
+	movement_buffer[6] = 0;
+
+	return buffer;
 }
 

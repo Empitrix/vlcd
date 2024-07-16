@@ -13,14 +13,6 @@
 // '\x00', '\xFA', '\x00', '\xFA', '\x00', '\x02', '\x00', '\x02' ...MONO[0, 1]/RGB (WIDTH.HEIGHT)
 // total len: (MUST HAVE: 8)
 
-unsigned char first_h(int decimalNumber) {
-	return (decimalNumber >> 8) & 0xFF;
-}
-
-// Function to get the second hexadecimal byte (lower byte)
-unsigned char second_h(int decimalNumber) {
-	return decimalNumber & 0xFF;
-}
 
 void read_exec(struct LoopEvent le){
 	int x, y, i, idx;

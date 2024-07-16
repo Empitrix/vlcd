@@ -17,6 +17,8 @@ void sdl_cls(SDL_Renderer *rend);
 void sdl_set(SDL_Renderer *rend);
 void sdl_end(SDL_Renderer *rend);
 
+void key_state(SDL_Event, int *, int *, int*, int);
+
 
 /* Render Text */
 void rtextf_rect(SDL_Renderer *rend, TTF_Font* font, char* text, int size, SDL_Rect rect, SDL_Color color){
@@ -50,7 +52,6 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 	// FONT
 	TTF_Init();
-	// TTF_Font *font = TTF_OpenFont("./assets/roboto.ttf", FONTSIZ);
 	TTF_Font *font = TTF_OpenFont("./assets/HNFMR.ttf", FONTSIZ);
 
 
@@ -74,7 +75,10 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 
 	int shift = 0;
+	int ctrl = 0;
 	int changed = 0;
+	int is_updated = 0;
+
 
 	while(running){
 		SDL_Color bg = canvas.color;
@@ -83,12 +87,32 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 		changed = 0;
 
+
+		struct LoopEvent le;
+		if((client = SDLNet_TCP_Accept(server)))
+			le.soc = &client;
+		else
+			le.soc = NULL;
+
+		if(is_updated){
+			char *keybf = get_movement_buffer();
+
+			// send data
+
+			is_updated = 0;
+		}
+
+
 		SDL_Event event;
 
 		while(SDL_PollEvent(&event)){
 			switch(event.type){
 				case SDL_QUIT:
 					running = 0;
+					break;
+
+				case SDL_KEYUP:
+					key_state(event, &ctrl, &shift, &is_updated, 0);
 					break;
 
 				case SDL_KEYDOWN:
@@ -115,11 +139,15 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 						default: break;
 					}
 
-					shift = 0;
-					switch (event.key.keysym.sym){
-						case SDLK_RSHIFT: case SDLK_LSHIFT: shift = 1; break;
-						default: break;
-					}
+					key_state(event, &ctrl, &shift, &is_updated, 1);
+					break;
+
+				/* {{ end of key-down }} */
+
+
+				case SDL_MOUSEBUTTONUP: case SDL_MOUSEBUTTONDOWN:
+					key_state(event, &ctrl, &shift, &is_updated, 0);
+					break;
 
 				default: break;
 			}
@@ -127,19 +155,30 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 
 		// win, rend, font, event, soc
-		struct LoopEvent le;
+
 		le.win = win;
 		le.rend = rend;
 		le.font = font;
 		le.changed = changed;
 		// le.event = event;
 
-		if((client = SDLNet_TCP_Accept(server)))
-			le.soc = &client;
-		else
-			le.soc = NULL;
 
 		sdloop(le);
+
+
+
+
+		/*
+		if(is_updated){
+			char *bff = get_movement_buffer();
+			printf("PONTER SIZE: %d\n", (int)sizeof(bff));
+
+			// SDLNet_TCP_Send(soc, arr, MAX_TRANSITION); 
+
+			is_updated = 0;
+		}
+		*/
+
 
 		free(client);
 
@@ -150,6 +189,45 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 	SDL_DestroyWindow(win);
 	SDL_Quit();
+}
+
+
+
+void key_state(SDL_Event event, int *shift, int *ctrl, int *is_updated, int is_down){
+	if(is_down == 1){
+		*shift = 0;
+		*ctrl = 0;
+	}
+	switch (event.key.keysym.sym){
+		case SDLK_RSHIFT: case SDLK_LSHIFT: *shift = 1; break;
+		case SDLK_RCTRL: case SDLK_LCTRL: *ctrl = 1; break;
+		default: break;
+	}
+
+	int mouse_idx = 0;
+	int mouse_down = 0;
+
+	switch (event.type) {
+		case SDL_MOUSEBUTTONDOWN: case SDL_MOUSEBUTTONUP:
+			*shift = 0;
+			*ctrl = 0;
+
+			update_movement_buffer(event.button.button, MOSUE_KEY);
+			update_movement_buffer(abs(event.button.x), MOUSE_X);
+			update_movement_buffer(abs(event.button.y), MOUSE_Y);
+			break;
+
+	}
+
+	update_movement_buffer(event.key.keysym.scancode, CODE_S);
+
+	// addiotional keys
+	update_movement_buffer(*ctrl, IS_CTRL);
+	update_movement_buffer(*shift, IS_SHIFT);
+
+	update_movement_buffer(is_down, IS_DOWN_S);
+
+	*is_updated = 1;
 }
 
 
