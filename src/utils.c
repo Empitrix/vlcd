@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "structs.h"
+#include "canvas.h"
 
 /* pexit: program exit: exit the program with a return code and message */
 void pexit(int ecode, char *format, ...){
@@ -203,11 +204,9 @@ int update_movement_buffer(int state, enum KEY_STATE name){
 
 char *get_movement_buffer(){
 	char *buffer = (char *)malloc(9 * sizeof(char *));
-	buffer[0] = movement_buffer[0];  // key-code
-	buffer[1] = movement_buffer[1];  // is down
-	buffer[2] = movement_buffer[2];  // shift state
-	buffer[3] = movement_buffer[3];  // ctrl state
-	buffer[4] = movement_buffer[4];  // mosue-key state
+	for(int i = 0; i < 5; i++){
+		buffer[i] = movement_buffer[i];
+	}
 
 	buffer[5] = first_h(movement_buffer[5]);   // mosue-key state
 	buffer[6] = second_h(movement_buffer[5]);  // mosue-key state
@@ -216,38 +215,22 @@ char *get_movement_buffer(){
 	buffer[8] = second_h(movement_buffer[6]);  // mosue-key state
 
 
-	printf(">");
-	// show
-	for(int i = 0; i < 8; i++){
-		// if(i < 6)
-		// 	movement_buffer[0] = '\x00';
+	// printf("\nDATA:\n");
+	// printf("key-code: %d\n", movement_buffer[0]);
+	// printf("is down: %d\n", movement_buffer[1]);
+	// printf("is shift: %d\n", movement_buffer[2]);
+	// printf("is ctrl: %d\n", movement_buffer[3]);
 
-		if(i == 5 || i == 7)
-			printf(".");
-		if(buffer[i])
-			printf("-");
-		else
-			printf(" ");
+	// printf("mouse key: %d\n", movement_buffer[4]);
+
+	// printf("mouse x: %d\n", movement_buffer[5]);
+	// printf("mouse y: %d\n", movement_buffer[6]);
+	// printf("--------------------------\n");
+
+	for(int i = 0; i < 6; ++i){
+		if(i != 2 && i != 3)
+			movement_buffer[i] = 0;
 	}
-	printf("<\n");
-
-
-	printf("\nDATA:\n");
-	printf("key-code: %d\n", movement_buffer[0]);
-	printf("is down: %d\n", movement_buffer[1]);
-	printf("is shift: %d\n", movement_buffer[2]);
-	printf("is ctrl: %d\n", movement_buffer[3]);
-
-	printf("mouse key: %d\n", movement_buffer[4]);
-
-	printf("mouse x: %d\n", movement_buffer[5]);
-	printf("mouse y: %d\n", movement_buffer[6]);
-	printf("--------------------------\n");
-
-
-	movement_buffer[4] = 0;
-	movement_buffer[5] = 0;
-	movement_buffer[6] = 0;
 
 	return buffer;
 }

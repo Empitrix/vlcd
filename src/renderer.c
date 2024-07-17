@@ -13,6 +13,9 @@
 
 #include <string.h>
 
+#include "udp/rcv.h"
+#include "udp/snd.h"
+
 void sdl_cls(SDL_Renderer *rend);
 void sdl_set(SDL_Renderer *rend);
 void sdl_end(SDL_Renderer *rend);
@@ -62,6 +65,9 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 	IPaddress ip;
 	TCPsocket server, client;
 
+	struct UDPSND snd;
+	snd = udp_send_init("127.0.0.1", pport, MAX_TRANSITION);
+
 	if (SDLNet_ResolveHost(&ip, NULL, pport) == -1) {
 		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
 		exit(1);
@@ -98,6 +104,7 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 			char *keybf = get_movement_buffer();
 
 			// send data
+			udp_send(snd, keybf, 9);
 
 			is_updated = 0;
 		}
@@ -111,9 +118,6 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 					running = 0;
 					break;
 
-				case SDL_KEYUP:
-					key_state(event, &ctrl, &shift, &is_updated, 0);
-					break;
 
 				case SDL_KEYDOWN:
 					switch (event.key.keysym.scancode){
@@ -149,6 +153,10 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 					key_state(event, &ctrl, &shift, &is_updated, 0);
 					break;
 
+				case SDL_KEYUP:
+					key_state(event, &ctrl, &shift, &is_updated, 0);
+					break;
+
 				default: break;
 			}
 		}
@@ -160,25 +168,8 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 		le.rend = rend;
 		le.font = font;
 		le.changed = changed;
-		// le.event = event;
-
 
 		sdloop(le);
-
-
-
-
-		/*
-		if(is_updated){
-			char *bff = get_movement_buffer();
-			printf("PONTER SIZE: %d\n", (int)sizeof(bff));
-
-			// SDLNet_TCP_Send(soc, arr, MAX_TRANSITION); 
-
-			is_updated = 0;
-		}
-		*/
-
 
 		free(client);
 

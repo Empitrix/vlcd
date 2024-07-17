@@ -1,8 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_net.h>
-#include <stdio.h>
-#include <strings.h>
-#include <stdlib.h>
+#include "../rules.h"
 
 struct UDPRCV {
 	UDPsocket soc;  // Socket descriptor
@@ -38,13 +36,16 @@ struct UDPRCV udp_rcv_init(int port, int transition){
 	return rcv;
 }
 
-char *udp_rcv(struct UDPRCV rcv){
+int udp_rcv(struct UDPRCV rcv){
+	// char *rcvd = (char *)malloc(MAX_TRANSITION * sizeof(char *));
 
-	if(SDLNet_UDP_Recv(rcv.soc, rcv.pack)){
-		return (char *)rcv.pack->data;
-	}
+	return SDLNet_UDP_Recv(rcv.soc, rcv.pack);
+	// if(SDLNet_UDP_Recv(rcv.soc, rcv.pack)){
+	// 	strcpy(rcvd, (char *)rcv.pack->data);
+	// 	return (char *)rcvd;
+	// }
 
-	return NULL;
+	// return rcvd;
 }
 
 
