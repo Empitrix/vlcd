@@ -4,6 +4,8 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
 #include "rules.h"
+#include "udp/rcv.h"
+#include "udp/snd.h"
 
 
 /* Initial Respone: scale & port from argument list */
@@ -24,8 +26,11 @@ struct LoopEvent {
 	SDL_Renderer *rend;
 	TTF_Font *font;
 	// SDL_Event event;
+	// struct UDPRCV* udp_rcv;
+	// struct UDPSND* udp_snd;
 	int changed;
 	TCPsocket *soc;
+	char buffer[MAX_TRANSITION];
 };
 
 struct SCREEN_SIZE {

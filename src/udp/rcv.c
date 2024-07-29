@@ -10,15 +10,15 @@ struct UDPRCV {
 };
 
 
-struct UDPRCV udp_rcv_init(int port, int transition){
+struct UDPRCV udp_recv_init(int port, int transition){
 	struct UDPRCV rcv;
 	rcv.ecode = 1;
 
 	/* Initialize SDL_net */
-	if (SDLNet_Init() < 0){
-		printf("SDLNet_Init: %s\n", SDLNet_GetError());
-		return rcv;
-	}
+	// if (SDLNet_Init() < 0){
+	// 	printf("SDLNet_Init: %s\n", SDLNet_GetError());
+	// 	return rcv;
+	// }
 
 	/* Open a socket */
 	if (!(rcv.soc = SDLNet_UDP_Open(port))){
@@ -27,7 +27,7 @@ struct UDPRCV udp_rcv_init(int port, int transition){
 	}
 
 	/* Make space for the packet */
-	if ((rcv.pack = SDLNet_AllocPacket(transition)) < 0){
+	if((rcv.pack = SDLNet_AllocPacket(transition)) < 0){
 		printf("SDLNet_AllocPacket: %s\n", SDLNet_GetError());
 		return rcv;
 	}
@@ -36,16 +36,8 @@ struct UDPRCV udp_rcv_init(int port, int transition){
 	return rcv;
 }
 
-int udp_rcv(struct UDPRCV rcv){
-	// char *rcvd = (char *)malloc(MAX_TRANSITION * sizeof(char *));
-
-	return SDLNet_UDP_Recv(rcv.soc, rcv.pack);
-	// if(SDLNet_UDP_Recv(rcv.soc, rcv.pack)){
-	// 	strcpy(rcvd, (char *)rcv.pack->data);
-	// 	return (char *)rcvd;
-	// }
-
-	// return rcvd;
+int udp_rcv(struct UDPRCV *rcv){
+	return SDLNet_UDP_Recv(rcv->soc, rcv->pack);
 }
 
 

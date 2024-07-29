@@ -79,15 +79,14 @@ void read_exec(struct LoopEvent le){
 				arr[j++] = second_h(k.b);
 			}
 		}
-
-		// printf("Y: %x - %x, X: %x - %x\n", first_h(x), second_h(x), first_h(y), second_h(y));
 	}
 
-	// // test
-	// printf("ARR: >%s< %d, [%x]", arr, (int)strlen(arr), arr[1]);
-
-	// SDLNet_TCP_Send(*le.soc, "FROM SERVER", MAX_TRANSITION); 
-	SDLNet_TCP_Send(*le.soc, arr, MAX_TRANSITION); 
+	if(le.soc != NULL){
+		int l = SDLNet_TCP_Send(*le.soc, arr, MAX_TRANSITION); 
+		printf("SEND STATUS: %d\n", l);
+	} else {
+		printf("FAILED TO SEND BACK THE DATA\n");
+	}
 
 	idx = 0;
 }

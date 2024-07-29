@@ -61,23 +61,32 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 	if(font == NULL)
 		pexit(1, "TTF Failed: %s\n", TTF_GetError());
 
+	struct UDPSND snd;
+
+	snd = udp_send_init("192.168.1.102", pport, MAX_TRANSITION);
 
 	IPaddress ip;
-	TCPsocket server, client;
-
-	struct UDPSND snd;
-	snd = udp_send_init("127.0.0.1", pport, MAX_TRANSITION);
-
-	if (SDLNet_ResolveHost(&ip, NULL, pport) == -1) {
-		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
-		exit(1);
+	if (SDLNet_ResolveHost(&ip, "192.168.1.102", pport) == -1) {
+		fprintf(stderr, "SDLNet_ResolveHost: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
 	}
 
-	server = SDLNet_TCP_Open(&ip);
-	if (!server) {
-		printf("SDLNet_TCP_Open: %s\n", SDLNet_GetError());
-		exit(2);
+	TCPsocket sock = SDLNet_TCP_Open(&ip);
+	if (!sock) {
+		fprintf(stderr, "SDLNet_TCP_Open: %s\n", SDLNet_GetError());
 	}
+
+	SDLNet_SocketSet set = SDLNet_AllocSocketSet(1);
+	if (!set) {
+		fprintf(stderr, "SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
+	}
+
+	if (SDLNet_TCP_AddSocket(set, sock) == -1) {
+		fprintf(stderr, "SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+	}
+
+	char buffer[MAX_TRANSITION];
+	int active;
 
 
 	int shift = 0;
@@ -85,6 +94,7 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 	int changed = 0;
 	int is_updated = 0;
 
+	int bytes_received;
 
 	while(running){
 		SDL_Color bg = canvas.color;
@@ -93,19 +103,73 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 		changed = 0;
 
+		// udp_send(&snd, "Awesome FROM VLCD", 17);
+		// printf("SENDT\n");
+		// printf("GOT: %d - %d\n", udp_rcv(&rcv), rcv.pack->len);
 
+		// char bufff[1000];
+		// SDLNet_TCP_Recv(server, bufff, sizeof(bufff));
+		// printf("BUFFF: %s", bufff);
+
+
+		// printf("STATUS: %d\n", SDLNet_SocketReady(server));
+		
 		struct LoopEvent le;
-		if((client = SDLNet_TCP_Accept(server)))
-			le.soc = &client;
-		else
-			le.soc = NULL;
+
+		// if((client = SDLNet_TCP_Accept(server))){
+		// 	le.soc = &client;
+		// 	printf("ACCEPTED\n");
+		// } else {
+		// 	le.soc = NULL;
+		// 	printf("DENINED\n");
+		// }
+
+		// printf("CLIENT: %p\n", &le.soc);
+
+
+		// printf("HERE\n");
+
+
+		/*
+		active = SDLNet_CheckSockets(set, FPS); // Wait up to 1000ms
+		if (active == -1) {
+			fprintf(stderr, "SDLNet_CheckSockets: %s\n", SDLNet_GetError());
+		} else if (active == 0) {
+			printf("No data available within the timeout period.\n");
+		} else {
+
+			memset(le.buffer, 0, MAX_TRANSITION);
+
+			if (SDLNet_SocketReady(sock)) {
+				int bytes_received = SDLNet_TCP_Recv(sock, le.buffer, MAX_TRANSITION - 1);
+				if (bytes_received <= 0) {
+					if (bytes_received == 0) {
+						printf("Connection closed by server\n");
+					} else {
+						fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
+					}
+				}
+			}
+		}
+		*/
+		if((active = SDLNet_CheckSockets(set, FPS)) == 1){
+
+			memset(le.buffer, 0, MAX_TRANSITION);
+
+			if(SDLNet_SocketReady(sock)) {
+				int bytes_received = SDLNet_TCP_Recv(sock, le.buffer, MAX_TRANSITION - 1);
+				le.soc = &sock;
+			} else 
+				le.soc = NULL;
+		}
+
+		le.soc = &sock;
+
 
 		if(is_updated){
 			char *keybf = get_movement_buffer();
-
 			// send data
-			udp_send(snd, keybf, 9);
-
+			udp_send(&snd, keybf, 9);
 			is_updated = 0;
 		}
 
@@ -163,7 +227,6 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 
 		// win, rend, font, event, soc
-
 		le.win = win;
 		le.rend = rend;
 		le.font = font;
@@ -171,13 +234,14 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 		sdloop(le);
 
-		free(client);
 
 		SDL_RenderPresent(rend);
-		SDL_Delay(FPS);
+		// SDL_Delay(FPS);
 	}
 
 
+	SDLNet_FreeSocketSet(set);
+	SDLNet_TCP_Close(sock);
 	SDL_DestroyWindow(win);
 	SDL_Quit();
 }

@@ -29,31 +29,34 @@ void sdloop(struct LoopEvent le){
 	if(canvas.initialized == 0)  // Loading Animation
 		loading_anim(le.rend);
 
-	if(le.soc != NULL){
-		char msg[MAX_TRANSITION];
+	// if(le.soc != NULL){
+	// char msg[MAX_TRANSITION];
 
-		if(SDLNet_TCP_Recv(*le.soc, msg, MAX_TRANSITION)){
-			struct COMMAND c = get_command(msg);  // get the order (command)
+	// if(SDLNet_TCP_Recv(*le.soc, msg, MAX_TRANSITION)){
+	if(le.buffer[0] != '\x00'){
+		// printf("SOMETHING\n");
+		struct COMMAND c = get_command(le.buffer);  // get the order (command)
 
-			if(c.type == INIT && c.init.ecode == 0)
-				init_exec(le, c.init);    // Initialize the window
+		if(c.type == INIT && c.init.ecode == 0)
+			init_exec(le, c.init);    // Initialize the window
 
-			else if(c.type == FRAME && c.frame.ecode == 0 && canvas.initialized)
-				frame_exec(le, c.frame);  // Setup a frame
+		else if(c.type == FRAME && c.frame.ecode == 0 && canvas.initialized)
+			frame_exec(le, c.frame);  // Setup a frame
 
-			else if(c.type == SPIXEL && c.spixel.ecode == 0 && canvas.initialized)
-				spixel_exec(le, c.spixel);  // Set a pixel by current scale
+		else if(c.type == SPIXEL && c.spixel.ecode == 0 && canvas.initialized)
+			spixel_exec(le, c.spixel);  // Set a pixel by current scale
 
-			// Fill the canvas
-			else if(c.type == FILL && c.fill.ecode == 0 && canvas.initialized)
-				fill_exec(le, c.fill);    // Fill the canvas
+		// Fill the canvas
+		else if(c.type == FILL && c.fill.ecode == 0 && canvas.initialized)
+			fill_exec(le, c.fill);    // Fill the canvas
 
-			else if(c.type == READ && canvas.initialized)
-				read_exec(le);    // Read data and send them back
+		else if(c.type == READ && canvas.initialized){
+			printf("NEED TO READ\n");
+			read_exec(le);    // Read data and send them back
 		}
-		memset(msg, 0, MAX_TRANSITION);  // clear
 	}
 
+	// memset(le.rcvbuff, 0, MAX_TRANSITION);  // clear
 
 	if(le.changed){
 		SDL_SetWindowSize(le.win,

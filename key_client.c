@@ -12,14 +12,14 @@
 int main(int argc, char **argv) {
 
 	struct UDPRCV rcv;
-	rcv = udp_rcv_init(UDPPORT, MAX_TRANSITION);
+	rcv = udp_recv_init(UDPPORT, MAX_TRANSITION);
 	
 	
 
 	/* Main loop */
 	int running = 1;
 	while (running) {
-		if (udp_rcv(rcv)) {
+		if (udp_rcv(&rcv)) {
 			printf("\nDATA:\n");
 			printf("key-code: %d\n", rcv.pack->data[0]);
 			printf("is down: %d\n", rcv.pack->data[1]);

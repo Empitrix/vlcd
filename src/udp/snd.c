@@ -19,10 +19,10 @@ struct UDPSND udp_send_init(char *addr, int port, int transition){
 
 		
 	/* Initialize SDL_net */
-	if (SDLNet_Init() < 0) {
-		printf("SDL-INIT ERR: %s", SDLNet_GetError());
-		return snd;
-	}
+	// if (SDLNet_Init() < 0) {
+	// 	printf("SDL-INIT ERR: %s", SDLNet_GetError());
+	// 	return snd;
+	// }
 
 	/* Open a socket on random port */
 	if ((snd.soc = SDLNet_UDP_Open(0)) < 0) {
@@ -49,26 +49,26 @@ struct UDPSND udp_send_init(char *addr, int port, int transition){
 
 
 /* udp_send: UDP send data */
-int udp_send(struct UDPSND snd, char *data, int len){
+int udp_send(struct UDPSND *snd, char *data, int len){
 
-	if(snd.ecode)
+	if(snd->ecode)
 		return -1;
 
 	// strcpy((char *)snd.pack->data, data);
 
-	snd.pack->data = (Uint8 *)data;
+	snd->pack->data = (Uint8 *)data;
 
 	// looping
-	snd.pack->address.host = snd.srvadd.host;  // Set the destination host
-	snd.pack->address.port = snd.srvadd.port;  // And destination port
+	snd->pack->address.host = snd->srvadd.host;  // Set the destination host
+	snd->pack->address.port = snd->srvadd.port;  // And destination port
 	// snd.pack->len = strlen((char *)snd.pack->data) + 1;  // This sets the p->channel
 
 	if(len < 0)
-		snd.pack->len = strlen((char *)snd.pack->data) + 1;  // This sets the p->channel
+		snd->pack->len = strlen((char *)snd->pack->data) + 1;  // This sets the p->channel
 	else 
-		snd.pack->len = len + 1;
+		snd->pack->len = len + 1;
 
 
-	return SDLNet_UDP_Send(snd.soc, -1, snd.pack);
+	return SDLNet_UDP_Send(snd->soc, -1, snd->pack);
 }
 
