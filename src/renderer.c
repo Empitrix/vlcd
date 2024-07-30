@@ -102,69 +102,16 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 		SDL_RenderClear(rend);
 
 		changed = 0;
-
-		// udp_send(&snd, "Awesome FROM VLCD", 17);
-		// printf("SENDT\n");
-		// printf("GOT: %d - %d\n", udp_rcv(&rcv), rcv.pack->len);
-
-		// char bufff[1000];
-		// SDLNet_TCP_Recv(server, bufff, sizeof(bufff));
-		// printf("BUFFF: %s", bufff);
-
-
-		// printf("STATUS: %d\n", SDLNet_SocketReady(server));
 		
 		struct LoopEvent le;
-
-		// if((client = SDLNet_TCP_Accept(server))){
-		// 	le.soc = &client;
-		// 	printf("ACCEPTED\n");
-		// } else {
-		// 	le.soc = NULL;
-		// 	printf("DENINED\n");
-		// }
-
-		// printf("CLIENT: %p\n", &le.soc);
-
-
-		// printf("HERE\n");
-
-
-		/*
-		active = SDLNet_CheckSockets(set, FPS); // Wait up to 1000ms
-		if (active == -1) {
-			fprintf(stderr, "SDLNet_CheckSockets: %s\n", SDLNet_GetError());
-		} else if (active == 0) {
-			printf("No data available within the timeout period.\n");
-		} else {
-
-			memset(le.buffer, 0, MAX_TRANSITION);
-
-			if (SDLNet_SocketReady(sock)) {
-				int bytes_received = SDLNet_TCP_Recv(sock, le.buffer, MAX_TRANSITION - 1);
-				if (bytes_received <= 0) {
-					if (bytes_received == 0) {
-						printf("Connection closed by server\n");
-					} else {
-						fprintf(stderr, "SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
-					}
-				}
-			}
-		}
-		*/
 		if((active = SDLNet_CheckSockets(set, FPS)) == 1){
-
 			memset(le.buffer, 0, MAX_TRANSITION);
-
 			if(SDLNet_SocketReady(sock)) {
 				int bytes_received = SDLNet_TCP_Recv(sock, le.buffer, MAX_TRANSITION - 1);
-				le.soc = &sock;
-			} else 
-				le.soc = NULL;
+			}
 		}
 
 		le.soc = &sock;
-
 
 		if(is_updated){
 			char *keybf = get_movement_buffer();

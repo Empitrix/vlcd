@@ -215,22 +215,25 @@ char *get_movement_buffer(){
 	buffer[8] = second_h(movement_buffer[6]);  // mosue-key state
 
 
-	// printf("\nDATA:\n");
-	// printf("key-code: %d\n", movement_buffer[0]);
-	// printf("is down: %d\n", movement_buffer[1]);
-	// printf("is shift: %d\n", movement_buffer[2]);
-	// printf("is ctrl: %d\n", movement_buffer[3]);
+	/*
+	printf("\nDATA:\n");
+	printf("key-code: %d\n", movement_buffer[0]);
+	printf("is down: %d\n", movement_buffer[1]);
+	printf("is shift: %d\n", movement_buffer[2]);
+	printf("is ctrl: %d\n", movement_buffer[3]);
 
-	// printf("mouse key: %d\n", movement_buffer[4]);
+	printf("mouse key: %d\n", movement_buffer[4]);
 
-	// printf("mouse x: %d\n", movement_buffer[5]);
-	// printf("mouse y: %d\n", movement_buffer[6]);
-	// printf("--------------------------\n");
+	printf("mouse x: %d\n", movement_buffer[5]);
+	printf("mouse y: %d\n", movement_buffer[6]);
+	printf("--------------------------\n");
+	*/
 
-	for(int i = 0; i < 6; ++i){
-		if(i != 2 && i != 3)
-			movement_buffer[i] = 0;
-	}
+	memset(movement_buffer, 0, sizeof(movement_buffer));
+	// for(int i = 0; i < 6; ++i){
+	// 	if(i != 2 && i != 3)
+	// 		movement_buffer[i] = 0;
+	// }
 
 	return buffer;
 }
