@@ -11,6 +11,7 @@
 #include "canvas.h"
 #include "utils.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 #include "udp/rcv.h"
@@ -105,9 +106,12 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 		
 		struct LoopEvent le;
 		if((active = SDLNet_CheckSockets(set, FPS)) == 1){
-			memset(le.buffer, 0, MAX_TRANSITION);
+			/// memset(le.buffer, 0, MAX_TRANSITION);
 			if(SDLNet_SocketReady(sock)) {
 				int bytes_received = SDLNet_TCP_Recv(sock, le.buffer, MAX_TRANSITION - 1);
+				// if(!(bytes_received >= 0)){
+				// 	memset(le.buffer, 0, sizeof(le.buffer));
+				// }
 			}
 		}
 

@@ -3,6 +3,7 @@
 #include <SDL2/SDL_scancode.h>
 #include <SDL2/SDL_video.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "src/renderer.h"
 #include "src/execute.h"
@@ -26,15 +27,40 @@ int main(int argc, char *argv[]){
 
 void sdloop(struct LoopEvent le){
 
+	char msg[MAX_TRANSITION];
 	if(canvas.initialized == 0)  // Loading Animation
 		loading_anim(le.rend);
 
 	if(le.buffer[0] != '\x00'){
 
-		struct COMMAND c = get_command(le.buffer);  // get the order (command)
-		memset(le.buffer, 0, MAX_TRANSITION);  // clear
+		if(le.buffer[0] == '\x02'){
+			printf("\nSTART-----------------\n\n");
 
-		if(c.type == INIT && c.init.ecode == 0)
+			printf("\tRED: %d\n", ghex(le.buffer[9]));
+			printf("\tGREEN: %d\n", ghex(le.buffer[10]));
+			printf("\tBLUE: %d\n\n", ghex(le.buffer[11]));
+
+
+			printf("\tRED: %d\n", ghex(le.buffer[12]));
+			printf("\tGREEN: %d\n", ghex(le.buffer[13]));
+			printf("\tBLUE: %d\n\n", ghex(le.buffer[14]));
+
+			printf("\tRED: %d\n", ghex(le.buffer[15]));
+			printf("\tGREEN: %d\n", ghex(le.buffer[16]));
+			printf("\tBLUE: %d\n\n", ghex(le.buffer[17]));
+
+			printf("\tRED: %d\n", ghex(le.buffer[18]));
+			printf("\tGREEN: %d\n", ghex(le.buffer[19]));
+			printf("\tBLUE: %d", ghex(le.buffer[20]));
+
+			printf("\n\n-----------------END\n");
+		}
+
+		struct COMMAND c = get_command(le.buffer);  // get the order (command)
+
+
+
+		if(c.type == INIT && c.init.ecode == 0 && canvas.initialized == 0)
 			init_exec(le, c.init);    // Initialize the window
 
 		else if(c.type == FRAME && c.frame.ecode == 0 && canvas.initialized)
@@ -54,7 +80,7 @@ void sdloop(struct LoopEvent le){
 		}
 	}
 
-	// memset(le.buffer, 0, MAX_TRANSITION);  // clear
+	memset(le.buffer, 0, sizeof(le.buffer));  // clear
 
 	if(le.changed){
 		SDL_SetWindowSize(le.win,
