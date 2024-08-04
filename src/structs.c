@@ -4,8 +4,6 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
 #include "rules.h"
-#include "udp/rcv.h"
-#include "udp/snd.h"
 
 
 /* Initial Respone: scale & port from argument list */

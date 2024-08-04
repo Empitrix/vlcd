@@ -1,5 +1,4 @@
 #include <SDL2/SDL_pixels.h>
-#include <stdio.h>
 #include "structs.h"
 
 struct CANVAS {

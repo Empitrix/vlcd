@@ -1,8 +1,6 @@
 #include "structs.h"
 #include "utils.h"
-#include <stdio.h>
-#include <string.h>
-
+;
 #include "commands/init.c"
 #include "commands/frame.c"
 #include "commands/spixel.c"

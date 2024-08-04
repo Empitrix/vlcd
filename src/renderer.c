@@ -14,15 +14,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "udp/rcv.h"
 #include "udp/snd.h"
 
-void sdl_cls(SDL_Renderer *rend);
-void sdl_set(SDL_Renderer *rend);
-void sdl_end(SDL_Renderer *rend);
 
 void key_state(SDL_Event, int *, int *, int*, int);
-
 
 /* Render Text */
 void rtextf_rect(SDL_Renderer *rend, TTF_Font* font, char* text, int size, SDL_Rect rect, SDL_Color color){

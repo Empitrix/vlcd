@@ -1,7 +1,6 @@
 #include "../structs.h"
 #include "../canvas.h"
 #include "../utils.h"
-#include <stdio.h>
 
 /* Execution */
 void init_exec(struct LoopEvent le, struct INIT_COMM init){

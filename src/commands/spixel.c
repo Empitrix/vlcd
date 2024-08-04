@@ -2,10 +2,6 @@
 #include "../rules.h"
 #include "../utils.h"
 #include <SDL2/SDL_stdinc.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 /*
 COMM    Xa      Xb      Ya      Yb      R       G      B

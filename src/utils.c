@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "structs.h"
-#include "canvas.h"
-
 
 
 /* Clear the given buffer */
@@ -73,7 +71,6 @@ struct InitRes get_init_res(int argc, char *argv[]){
 }
 
 
-
 struct SCREEN_SIZE get_screen_size(){
 	/* get screen width x height using 'xdpyinfo' */
 	FILE *fp;
@@ -103,7 +100,6 @@ struct SCREEN_SIZE get_screen_size(){
 }
 
 
-
 int change_access(int w, int h){
 	struct SCREEN_SIZE win_size;
 	win_size = get_screen_size();  // get screen size
@@ -127,7 +123,6 @@ int hexm(int primary, int secondary){
 }
 
 
-
 unsigned char first_h(int decimalNumber) {
 	return (decimalNumber >> 8) & 0xFF;
 }
@@ -136,7 +131,6 @@ unsigned char first_h(int decimalNumber) {
 unsigned char second_h(int decimalNumber) {
 	return decimalNumber & 0xFF;
 }
-
 
 
 /* reverse */
@@ -177,16 +171,10 @@ char *decimal_to_hex(int decn){
 }
 
 
-
-/* MOVEMENT BUFFER */
-
 /*
- *
 code  is-down  is-shift  is-ctrl  m-key mxa   mxb    mya    myb 
 \x00  \x00     \x00      \x00     \x00  \x00  \x00   \x00   \x00
-
 */
-
 
 enum KEY_STATE {
 	CODE_S,

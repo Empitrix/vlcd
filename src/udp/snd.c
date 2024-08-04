@@ -2,7 +2,7 @@
 #include <SDL2/SDL_net.h>
 #include <stdio.h>
 #include <strings.h>
-#include <stdlib.h>
+
 
 struct UDPSND {
 	UDPsocket soc;
@@ -16,13 +16,6 @@ struct UDPSND {
 struct UDPSND udp_send_init(char *addr, int port, int transition){
 	struct UDPSND snd;
 	snd.ecode = 1;
-
-		
-	/* Initialize SDL_net */
-	// if (SDLNet_Init() < 0) {
-	// 	printf("SDL-INIT ERR: %s", SDLNet_GetError());
-	// 	return snd;
-	// }
 
 	/* Open a socket on random port */
 	if ((snd.soc = SDLNet_UDP_Open(0)) < 0) {
@@ -61,7 +54,6 @@ int udp_send(struct UDPSND *snd, char *data, int len){
 	// looping
 	snd->pack->address.host = snd->srvadd.host;  // Set the destination host
 	snd->pack->address.port = snd->srvadd.port;  // And destination port
-	// snd.pack->len = strlen((char *)snd.pack->data) + 1;  // This sets the p->channel
 
 	if(len < 0)
 		snd->pack->len = strlen((char *)snd->pack->data) + 1;  // This sets the p->channel
