@@ -13,21 +13,16 @@ COMM    RED     GREEN   BLUE    Wa      Wb      Ha      Hb      MODE
 TOTAL: 9
 */ 
 
-struct INIT_COMM get_init_comm(char ord[]){
+struct INIT_COMM get_init_comm(unsigned char ord[]){
 	struct INIT_COMM com;
-	int l = (int)strlen(ord);
-
 
 	int red, green, blue, i;
 	red = green = blue = com.width = com.height = -1;
 
-	char hold;
+	unsigned char hold;
 
 	for(i = 0; i < 9; ++i){
 		if(i == 0 ){ continue; }
-
-		// non-valid cahrs
-		// if( isxdigit(ord[i]) != 0 ){ com.ecode = 1; return com; }
 
 		if(red == -1)
 			red = ghex(ord[i]);

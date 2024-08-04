@@ -12,5 +12,6 @@ void spixel_exec(struct LoopEvent le, struct SPIXEL_COMM spixel){
 
 	spixel.color = klr;
 	canvas.pixel = spixel;
+	canvas.pixel_init = 1;
 }
 

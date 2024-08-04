@@ -3,7 +3,9 @@ int running = 1;
 #define FPS 1000 / 60
 
 #define SOCKET_TIMEOUT 500
-#define MAX_TRANSITION 1024
+
+#define MAX_TRANSITION 1500
+
 #define ALPHA 255
 
 // #define MAXFRAME 1000

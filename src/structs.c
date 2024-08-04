@@ -25,12 +25,9 @@ struct LoopEvent {
 	SDL_Window *win;
 	SDL_Renderer *rend;
 	TTF_Font *font;
-	// SDL_Event event;
-	// struct UDPRCV* udp_rcv;
-	// struct UDPSND* udp_snd;
 	int changed;
 	TCPsocket *soc;
-	char buffer[MAX_TRANSITION];
+	unsigned char buffer[MAX_TRANSITION];
 };
 
 struct SCREEN_SIZE {
@@ -70,6 +67,7 @@ struct FRAME_COMM {
 	int x, y;
 	int width, height;
 	SDL_Color data[MAXFRAME];
+	unsigned char mono_data[8210];
 	int ecode;  // exit code
 };
 

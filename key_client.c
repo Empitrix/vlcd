@@ -7,7 +7,6 @@
 #include "src/udp/rcv.h"
 
 #define UDPPORT 8080
-#define MAX_TRANSITION 1024
 
 int main(int argc, char **argv) {
 

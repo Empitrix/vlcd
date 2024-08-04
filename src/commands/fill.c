@@ -13,7 +13,7 @@ COMM    RED     GREEN   BLUE
 TOTOAL: 4
 */ 
 
-struct FILL_COMM get_fill_comm(char ord[]){
+struct FILL_COMM get_fill_comm(unsigned char ord[]){
 	struct FILL_COMM com;
 
 	int red, green, blue, i;

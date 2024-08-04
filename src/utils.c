@@ -7,6 +7,15 @@
 #include "structs.h"
 #include "canvas.h"
 
+
+
+/* Clear the given buffer */
+void clear_buff(unsigned char *buff, int len){
+	for(int i = 0; i < len; ++i)
+		buff[i] = '\x00';
+}
+
+
 /* pexit: program exit: exit the program with a return code and message */
 void pexit(int ecode, char *format, ...){
 	// char *msg = malloc(sizeof(char *));
@@ -221,19 +230,13 @@ char *get_movement_buffer(){
 	printf("is down: %d\n", movement_buffer[1]);
 	printf("is shift: %d\n", movement_buffer[2]);
 	printf("is ctrl: %d\n", movement_buffer[3]);
-
 	printf("mouse key: %d\n", movement_buffer[4]);
-
 	printf("mouse x: %d\n", movement_buffer[5]);
 	printf("mouse y: %d\n", movement_buffer[6]);
 	printf("--------------------------\n");
 	*/
 
 	memset(movement_buffer, 0, sizeof(movement_buffer));
-	// for(int i = 0; i < 6; ++i){
-	// 	if(i != 2 && i != 3)
-	// 		movement_buffer[i] = 0;
-	// }
 
 	return buffer;
 }

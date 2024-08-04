@@ -13,7 +13,7 @@ COMM    Xa      Xb      Ya      Yb      R       G      B
 TOTAL: 8
 */ 
 
-struct SPIXEL_COMM get_spixel_comm(char ord[]){
+struct SPIXEL_COMM get_spixel_comm(unsigned char ord[]){
 	struct SPIXEL_COMM com;
 
 	int red, green, blue, i, hold;

@@ -8,7 +8,7 @@
 #include "commands/spixel.c"
 #include "commands/fill.c"
 
-struct COMMAND get_command(char data[]){
+struct COMMAND get_command(unsigned char data[]){
 	struct COMMAND com;
 	com.type = NONE;
 
@@ -33,8 +33,8 @@ struct COMMAND get_command(char data[]){
 			break;
 
 		case READ:
-			if((int)strlen(data) != 1)
-				com.type = NONE;
+			// if((int)strlen((char *)data) != 1)
+			// 	com.type = NONE;
 			break;
 
 		default: break;

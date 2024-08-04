@@ -5,6 +5,7 @@
 struct CANVAS {
 	int initialized;            // is initialized
 	int mono;                   // is mono color
+	int pixel_init;             // is any pixel initialized
 	int win_width;              // window width
 	int win_height;             // window height
 	SDL_Color color;
@@ -13,7 +14,7 @@ struct CANVAS {
 };
 
 
-struct CANVAS canvas = {0, 0, 200, 200, (SDL_Color){255, 255, 255, 255}, {}, {}};
+struct CANVAS canvas = {0, 0, 0, 200, 200, (SDL_Color){255, 255, 255, 255}, {}, {}};
 
 void render_canvas(struct LoopEvent le){
 	int i;
@@ -30,8 +31,21 @@ void render_canvas(struct LoopEvent le){
 	r.w = canvas.frame.width * pscale;
 	r.h = canvas.frame.height * pscale;
 
+
 	for(int j = 0, height = 0, width = 0; j < loop_count; ++j){
-		SDL_Color klr = canvas.frame.data[j];
+		SDL_Color klr;
+
+		if(canvas.mono){
+
+			if(canvas.frame.mono_data[j] == (unsigned char)'\xFF')
+				klr = (SDL_Color){255, 255, 255, 255};
+			else
+				klr = (SDL_Color){0, 0, 0, 255};
+
+		} else{
+			klr = canvas.frame.data[j];
+		}
+
 		SDL_Rect rect;
 
 		rect.x = r.x + (width * pscale);
@@ -50,16 +64,18 @@ void render_canvas(struct LoopEvent le){
 
 
 	// draw pixels
-	SDL_Color pk;
-	SDL_Rect pr;
-	pk = canvas.pixel.color;
+	if(canvas.pixel_init){
+		SDL_Color pk;
+		SDL_Rect pr;
+		pk = canvas.pixel.color;
 
-	pr.w = pr.h = 1 * pscale;
-	pr.x = canvas.pixel.x * pscale;
-	pr.y = canvas.pixel.x * pscale;
+		pr.w = pr.h = 1 * pscale;
+		pr.x = canvas.pixel.x * pscale;
+		pr.y = canvas.pixel.y * pscale;
 
-	SDL_SetRenderDrawColor(le.rend, pk.r, pk.g, pk.b, pk.a);
-	SDL_RenderFillRect(le.rend, &pr);
+		SDL_SetRenderDrawColor(le.rend, pk.r, pk.g, pk.b, pk.a);
+		SDL_RenderFillRect(le.rend, &pr);
+	}
 
 }
 

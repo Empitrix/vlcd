@@ -15,9 +15,25 @@ comm    Xa      Xb      Ya      Yb      Wa      Wb      Ha      Hb     ...MONO[0
 total len: (MUST HAVE: 9)
 */ 
 
+
+/* Update the screen buffer by given hex for mono-color */
+void update_mono_buffer(unsigned char hex, unsigned char buff[], int idx, int width){
+	int stepper = idx;
+
+	if(idx >= width)
+		stepper += (idx - (idx % width)) * 7;
+
+	for (int i = 0; i <= 7; i += 1) {
+		buff[stepper] = (hex & 1) ? '\x00' : '\xFF';  // Reverse
+		hex >>= 1;
+		stepper += width;
+	}
+
+}
+
 #define MAX 9
 
-struct FRAME_COMM get_frame_comm(char ord[]){
+struct FRAME_COMM get_frame_comm(unsigned char ord[]){
 	struct FRAME_COMM comm;
 
 	int red, green, blue, i, j, hold;
@@ -40,12 +56,27 @@ struct FRAME_COMM get_frame_comm(char ord[]){
 		else 
 			comm.height = hexm(hold, ord[i]);
 	}
+	
+	if(canvas.mono){
+		for(int i = 0; i < comm.height * comm.width; i++)
+			comm.mono_data[i] = '\x00';
+	}
+
+
+	int basesiz = comm.width * comm.height;
+
+	if(canvas.mono)  // one byte for mono color
+		basesiz /= 8;
+	else
+		basesiz *= 3;  // three byte for each value of full color (r, g, b)
+
+	basesiz += MAX;
+
 
 	// captrue secondary(color) data
-	for(j = 0; i < ((comm.width * comm.height) * (canvas.mono ? 1 : 3)) + MAX; ++i){
-
+	for(j = 0; i < basesiz ; ++i, j++){
 		if(canvas.mono)
-			comm.data[j++] = MONOKLR;
+			update_mono_buffer(ord[i], comm.mono_data, j, comm.width);
 		else {
 			if(red == -1)
 				red = ghex(ord[i]);
@@ -53,11 +84,10 @@ struct FRAME_COMM get_frame_comm(char ord[]){
 				green = ghex(ord[i]);
 			else {
 				blue = ghex(ord[i]);
-				comm.data[j++] = (SDL_Color){red, green, blue, ALPHA};
+				comm.data[j] = (SDL_Color){red, green, blue, ALPHA};
 				red = green = blue = -1;
 			}
 		}
-		
 	}
 
 	comm.ecode = 0;
