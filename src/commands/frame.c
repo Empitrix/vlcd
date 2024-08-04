@@ -19,7 +19,7 @@ void update_mono_buffer(unsigned char hex, unsigned char buff[], int idx, int wi
 		stepper += (idx - (idx % width)) * 7;
 
 	for (int i = 0; i <= 7; i += 1) {
-		buff[stepper] = (hex & 1) ? '\x00' : '\xFF';  // Reverse
+		buff[stepper] = (hex & 1) ? '\xFF' : '\x00';
 		hex >>= 1;
 		stepper += width;
 	}
