@@ -2,9 +2,9 @@
 #include <SDL2/SDL_net.h>
 #include <stdio.h>
 #include <strings.h>
-#include <stdlib.h>
 
 #include "src/udp/rcv.h"
+#include "src/rules.h"
 
 #define UDPPORT 8080
 
