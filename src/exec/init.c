@@ -15,5 +15,5 @@ void init_exec(struct LoopEvent le, struct INIT_COMM init){
 	SDL_SetWindowSize(le.win, canvas.win_width, canvas.win_height);
 	canvas.initialized = 1;
 	canvas.mono = init.mode == 0;
-	canvas.color = init.color;
+	canvas.mono_color = init.color;
 }

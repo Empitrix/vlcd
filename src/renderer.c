@@ -35,7 +35,7 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 		pexit(1, "Failed: %s\n", SDL_GetError());
 	}
 
-	SDL_Window* win = SDL_CreateWindow("Visual Canvas",
+	SDL_Window* win = SDL_CreateWindow("VLCD",
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		width, height, 0);
 

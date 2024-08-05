@@ -8,12 +8,16 @@ struct CANVAS {
 	int win_width;              // window width
 	int win_height;             // window height
 	SDL_Color color;
+	SDL_Color mono_color;
 	struct FRAME_COMM frame;    // frame
 	struct SPIXEL_COMM pixel;   // pixel
 };
 
 
-struct CANVAS canvas = {0, 0, 0, 200, 200, (SDL_Color){255, 255, 255, 255}, {}, {}};
+struct CANVAS canvas = {0, 0, 0, 200, 200,
+	(SDL_Color){255, 255, 255, 255},
+	(SDL_Color){255, 255, 255, 255},
+	{}, {}};
 
 void render_canvas(struct LoopEvent le){
 	int i;
@@ -37,7 +41,7 @@ void render_canvas(struct LoopEvent le){
 		if(canvas.mono){
 
 			if(canvas.frame.mono_data[j] == (unsigned char)'\xFF')
-				klr = (SDL_Color){255, 255, 255, 255};
+				klr = canvas.mono_color;
 			else
 				klr = (SDL_Color){0, 0, 0, 255};
 
