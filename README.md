@@ -1,4 +1,4 @@
-# Virtual Canvas
+# VLCD
 an remote display emulator via socket
 
 ## Commands
@@ -207,8 +207,8 @@ sudo apt install libsdl2-net-dev
 
 Compile:
 ```bash
-git clone "https://github.com/empitrix/virtual_canvas"
-cd ./virtual_canvas
+git clone "https://github.com/empitrix/vlcd"
+cd ./vlcd
 
 mkdir build && cd ./build
 
