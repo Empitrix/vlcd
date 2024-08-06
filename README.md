@@ -153,8 +153,8 @@ You build the program yourself:
 
 First you need to clone the repository and going to projects folder:
 ```bash
-git clone "https://github.com/empitrix/virtual_canvas"
-cd ./virtual_canvas
+git clone "https://github.com/empitrix/vlcd"
+cd ./vlcd
 ```
 
 after that you can compile the program by:
@@ -234,5 +234,7 @@ run the client:
 ./client.out
 ```
 
-
-
+and if you want to run this with static ip use (in this case `client` is not work):
+```bash
+./server.out 1 8080 "<static ip>"
+```
