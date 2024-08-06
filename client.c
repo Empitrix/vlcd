@@ -4,7 +4,7 @@
 #include "src/sockets.h"
 #include "src/rules.h"
 
-#define SOCPORT 4210
+#define SOCPORT 8080
 
 
 int send_msg(char arr[]){
