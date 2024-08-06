@@ -31,6 +31,9 @@ void rtextf_rect(SDL_Renderer *rend, TTF_Font* font, char* text, int size, SDL_R
 
 void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
+	int listen_local = 0;
+	listen_local = is_empty(p_ipaddr);
+
 	if(SDL_Init(SDL_INIT_EVERYTHING) != 0){
 		pexit(1, "Failed: %s\n", SDL_GetError());
 	}
@@ -59,10 +62,16 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 	struct UDPSND snd;
 
-	snd = udp_send_init("192.168.1.102", pport, MAX_TRANSITION);
+	if(listen_local)
+		snd = udp_send_init("127.0.0.1", pport, MAX_TRANSITION);
+	else
+		snd = udp_send_init(p_ipaddr, pport, MAX_TRANSITION);
+
 
 	IPaddress ip;
-	if (SDLNet_ResolveHost(&ip, "192.168.1.102", pport) == -1) {
+	SDLNet_SocketSet set;
+
+	if (SDLNet_ResolveHost(&ip, listen_local ? NULL : p_ipaddr, pport) == -1) {
 		fprintf(stderr, "SDLNet_ResolveHost: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
@@ -72,13 +81,17 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 		fprintf(stderr, "SDLNet_TCP_Open: %s\n", SDLNet_GetError());
 	}
 
-	SDLNet_SocketSet set = SDLNet_AllocSocketSet(1);
-	if (!set) {
-		fprintf(stderr, "SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
-	}
+	if(!listen_local){
+		
+		set = SDLNet_AllocSocketSet(1);
+		if (!set) {
+			fprintf(stderr, "SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
+		}
 
-	if (SDLNet_TCP_AddSocket(set, sock) == -1) {
-		fprintf(stderr, "SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+		if (SDLNet_TCP_AddSocket(set, sock) == -1) {
+			fprintf(stderr, "SDLNet_TCP_AddSocket: %s\n", SDLNet_GetError());
+		}
+
 	}
 
 	char buffer[MAX_TRANSITION];
@@ -97,20 +110,28 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 		SDL_SetRenderDrawColor(rend, bg.r, bg.g, bg.b, bg.a);
 		SDL_RenderClear(rend);
 
+		struct LoopEvent le;
 		changed = 0;
 		
-		struct LoopEvent le;
-		if((active = SDLNet_CheckSockets(set, FPS)) == 1){
-			/// memset(le.buffer, 0, MAX_TRANSITION);
-			if(SDLNet_SocketReady(sock)) {
-				int bytes_received = SDLNet_TCP_Recv(sock, le.buffer, MAX_TRANSITION - 1);
-				// if(!(bytes_received >= 0)){
-				// 	memset(le.buffer, 0, sizeof(le.buffer));
-				// }
+		if(listen_local){
+			TCPsocket client_sock = SDLNet_TCP_Accept(sock);
+			if (client_sock) { /* no connection accepted */
+				int len = SDLNet_TCP_Recv(client_sock, le.buffer, MAX_TRANSITION - 1);
+				if (!len) {
+					printf("SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
+					break;
+				}
 			}
+			le.soc = &client_sock;
+		} else {
+			if((active = SDLNet_CheckSockets(set, FPS)) == 1){
+				if(SDLNet_SocketReady(sock)) {
+					int bytes_received = SDLNet_TCP_Recv(sock, le.buffer, MAX_TRANSITION - 1);
+				}
+			}
+			le.soc = &sock;
 		}
 
-		le.soc = &sock;
 
 		if(is_updated){
 			char *keybf = get_movement_buffer();
@@ -182,7 +203,9 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 
 		SDL_RenderPresent(rend);
-		// SDL_Delay(FPS);
+
+		if(listen_local)
+			SDL_Delay(FPS);
 	}
 
 

@@ -2,7 +2,6 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_scancode.h>
 #include <SDL2/SDL_video.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "src/renderer.h"
@@ -21,6 +20,7 @@ int main(int argc, char *argv[]){
 	struct InitRes ires = get_init_res(argc, argv);
 	pport = ires.port;
 	pscale = ires.scale;
+	strcpy(p_ipaddr, ires.ipaddr);
 	sdl_init_win(canvas.win_width, canvas.win_height, sdloop);
 	return 0;
 }

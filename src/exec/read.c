@@ -41,11 +41,11 @@ void read_exec(struct LoopEvent le){
 				arr[j++] = first_h(y);
 				arr[j++] = second_h(y);
 
-				arr[j++] = second_h(k.r);
-				arr[j++] = second_h(k.g);
-				arr[j++] = second_h(k.b);
+				arr[j++] = ghex(k.r);
+				arr[j++] = ghex(k.g);
+				arr[j++] = ghex(k.b);
 			}
-		}else if(x >= canvas.frame.x && x <= canvas.frame.x - 1 + canvas.frame.width &&
+		} else if(x >= canvas.frame.x && x <= canvas.frame.x - 1 + canvas.frame.width &&
 				y >= canvas.frame.y && y <= canvas.frame.y - 1 + canvas.frame.height){
 			SDL_Color k = canvas.frame.data[idx];
 			printf("[F] [%3d, %3d]: {\x1B[31m%-3d\x1B[0m, \x1B[32m%-3d\x1B[0m, \x1B[34m%-3d\x1B[0m}\n", x, y, k.r, k.g, k.b);
@@ -57,9 +57,9 @@ void read_exec(struct LoopEvent le){
 			arr[j++] = first_h(y);
 			arr[j++] = second_h(y);
 
-			arr[j++] = second_h(k.r);
-			arr[j++] = second_h(k.g);
-			arr[j++] = second_h(k.b);
+			arr[j++] = ghex(k.r);
+			arr[j++] = ghex(k.g);
+			arr[j++] = ghex(k.b);
 
 			++idx;
 
@@ -74,9 +74,9 @@ void read_exec(struct LoopEvent le){
 				arr[j++] = first_h(y);
 				arr[j++] = second_h(y);
 
-				arr[j++] = second_h(k.r);
-				arr[j++] = second_h(k.g);
-				arr[j++] = second_h(k.b);
+				arr[j++] = ghex(k.r);
+				arr[j++] = ghex(k.g);
+				arr[j++] = ghex(k.b);
 			}
 		}
 	}

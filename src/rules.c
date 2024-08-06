@@ -21,4 +21,5 @@ int running = 1;
 // public port
 int pport = 0;
 int pscale = 1;
+char p_ipaddr[128];
 

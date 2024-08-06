@@ -58,6 +58,7 @@ int main(int argc, char *argv[]){
 	sleep(1);
 	close(s);
 
+	/*
 	printf("READING: \n");
 	char r[1024] = {'\x05'};
 	if((s = send_msg(r)) == -1){ pexit(1, "ERR"); }
@@ -81,6 +82,7 @@ int main(int argc, char *argv[]){
 		printf("B: \\x%x\n",  msg[i + 6]);
 		printf("\n-----------\n");
 	}
+	*/
 
 	return 0;
 }

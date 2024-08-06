@@ -16,7 +16,6 @@ void clear_buff(unsigned char *buff, int len){
 
 /* pexit: program exit: exit the program with a return code and message */
 void pexit(int ecode, char *format, ...){
-	// char *msg = malloc(sizeof(char *));
 	char *msg = malloc(1000 * sizeof(char *));
 	va_list args;
 	va_start(args, format);
@@ -36,20 +35,13 @@ int e_return(int ecode, char *format, ...){
 	return ecode;
 }
 
-void printd(char *format, ...){
-	va_list args;
-	va_start(args, format);
-	if(DEBUG_MODE)
-		printf(format, args);
-	va_end(args);
-}
 
 /* get initial response: get flags from argument (user) */
 struct InitRes get_init_res(int argc, char *argv[]){
 	struct InitRes ires;
 	ires.scale = ires.port = -1;
 
-	if(argc != 3)
+	if(argc < 3 && argc > 4)
 		pexit(1,
 			"Argument Error:\n%s <SCALE:8-bit> <PORT:16-bit>", argv[0]);
 
@@ -64,8 +56,20 @@ struct InitRes get_init_res(int argc, char *argv[]){
 			else if (ires.scale < 1)
 				ires.scale = 1;
 		}
-		else
+		else if (i == 2)
 			ires.port = atoi(argv[i]);
+		else {
+			int dots = 0;
+			for(int j = 0; j < strlen(argv[i]); ++j)
+				if(argv[i][j] == '.')
+					dots++;
+
+			if(dots == 3)
+				strcpy(ires.ipaddr, argv[i]);
+			else
+				pexit(1,
+					"Invalid IP Address \"%s\"", argv[i]);
+		}
 
 	return ires;
 }
@@ -229,3 +233,7 @@ char *get_movement_buffer(){
 	return buffer;
 }
 
+
+int is_empty(char *data){
+	return strcmp(data, "") == 0;
+}
