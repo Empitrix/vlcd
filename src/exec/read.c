@@ -12,13 +12,12 @@
 //Xa      Xb      Ya      Yb      Wa      Wb      Ha      Hb     ...MONO[0, 1]/RGB (WIDTH.HEIGHT)
 // '\x00', '\xFA', '\x00', '\xFA', '\x00', '\x02', '\x00', '\x02' ...MONO[0, 1]/RGB (WIDTH.HEIGHT)
 // total len: (MUST HAVE: 8)
-
-
+//
 void read_exec(struct LoopEvent le){
 	int x, y, i, idx;
 	x = y = idx = 0;
 
-	char arr[MAX_TRANSITION];
+	unsigned char arr[MAX_TRANSITION];
 	int j;
 	j = 0;
 
@@ -80,6 +79,7 @@ void read_exec(struct LoopEvent le){
 			}
 		}
 	}
+
 
 	if(le.soc != NULL){
 		int l = SDLNet_TCP_Send(*le.soc, arr, MAX_TRANSITION); 

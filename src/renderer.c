@@ -94,7 +94,6 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 
 	}
 
-	char buffer[MAX_TRANSITION];
 	int active;
 
 
@@ -115,13 +114,14 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 		
 		if(listen_local){
 			TCPsocket client_sock = SDLNet_TCP_Accept(sock);
-			if (client_sock) { /* no connection accepted */
-				int len = SDLNet_TCP_Recv(client_sock, le.buffer, MAX_TRANSITION - 1);
+			if (client_sock > 0) {
+				int len = SDLNet_TCP_Recv(client_sock, le.buffer, MAX_TRANSITION);
 				if (!len) {
 					printf("SDLNet_TCP_Recv: %s\n", SDLNet_GetError());
-					break;
 				}
-			}
+			} else 
+				clear_buff(le.buffer, (int)sizeof(le.buffer));
+
 			le.soc = &client_sock;
 		} else {
 			if((active = SDLNet_CheckSockets(set, FPS)) == 1){

@@ -8,12 +8,19 @@ void frame_exec(struct LoopEvent le, struct FRAME_COMM frame){
 	canvas.frame = frame;
 
 	memset(canvas.frame.mono_data, 0, sizeof(canvas.frame.mono_data));
+	memset(canvas.frame.data, 0, sizeof(canvas.frame.data));
 
-	for(int i = 0; i < frame.width * frame.height + 10; i++)
-		canvas.frame.mono_data[i] = '\x00';
+	if(canvas.mono){
 
-	for(int i = 0; i < frame.width * frame.height; i++)
-		canvas.frame.mono_data[i] = frame.mono_data[i];
+		for(int i = 0; i < frame.width * frame.height + 10; i++)
+			canvas.frame.mono_data[i] = '\x00';
+
+		for(int i = 0; i < frame.width * frame.height; i++)
+			canvas.frame.mono_data[i] = frame.mono_data[i];
+
+	} else
+		for(int i = 0; i < frame.width * frame.height; i++)
+			canvas.frame.data[i] = frame.data[i];
 
 }
 

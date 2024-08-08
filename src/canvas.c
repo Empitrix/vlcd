@@ -19,11 +19,11 @@ struct CANVAS canvas = {0, 0, 0, 200, 200,
 	(SDL_Color){255, 255, 255, 255},
 	{}, {}};
 
+
 void render_canvas(struct LoopEvent le){
 	int i;
 
 	SDL_Rect r;
-	SDL_Color empty = {0, 0, 0, 255};
 
 	r.x = canvas.frame.x * pscale;
 	r.y = canvas.frame.y * pscale;
@@ -39,15 +39,12 @@ void render_canvas(struct LoopEvent le){
 		SDL_Color klr;
 
 		if(canvas.mono){
-
 			if(canvas.frame.mono_data[j] == (unsigned char)'\xFF')
 				klr = canvas.mono_color;
 			else
 				klr = (SDL_Color){0, 0, 0, 255};
-
-		} else{
+		} else
 			klr = canvas.frame.data[j];
-		}
 
 		SDL_Rect rect;
 

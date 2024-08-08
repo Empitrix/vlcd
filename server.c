@@ -12,6 +12,7 @@
 #include "src/exec/fill.h"
 #include "src/exec/read.h"
 #include "src/exec/spixel.h"
+#include "src/utils.h"
 
 void sdloop(struct LoopEvent);
 
@@ -33,7 +34,6 @@ void sdloop(struct LoopEvent le){
 		loading_anim(le.rend);
 
 	if(le.buffer[0] != '\x00'){
-
 		struct COMMAND c = get_command(le.buffer);  // get the order (command)
 
 		if(c.type == INIT && c.init.ecode == 0 && canvas.initialized == 0)
@@ -54,6 +54,8 @@ void sdloop(struct LoopEvent le){
 
 	memset(le.buffer, 0, sizeof(le.buffer));  // clear
 	clear_buff(le.buffer, (int)sizeof(le.buffer));
+
+	le.buffer[0] = '\x00';
 
 	if(le.changed){
 		SDL_SetWindowSize(le.win,

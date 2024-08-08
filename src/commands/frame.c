@@ -3,6 +3,7 @@
 #include "../utils.h"
 #include "../canvas.h"
 #include <SDL2/SDL_stdinc.h>
+#include <stdio.h>
 
 /*
 comm    Xa      Xb      Ya      Yb      Wa      Wb      Ha      Hb     ...MONO[0, 1]/RGB (WIDTH.HEIGHT)
@@ -69,17 +70,18 @@ struct FRAME_COMM get_frame_comm(unsigned char ord[]){
 
 
 	// captrue secondary(color) data
-	for(j = 0; i < basesiz ; ++i, j++){
-		if(canvas.mono)
+	for(j = 0; i < basesiz ; ++i){
+		if(canvas.mono){
 			update_mono_buffer(ord[i], comm.mono_data, j, comm.width);
-		else {
+			j++;
+		} else {
 			if(red == -1)
 				red = ghex(ord[i]);
 			else if(green == -1)
 				green = ghex(ord[i]);
 			else {
 				blue = ghex(ord[i]);
-				comm.data[j] = (SDL_Color){red, green, blue, ALPHA};
+				comm.data[j++] = (SDL_Color){red, green, blue, ALPHA};
 				red = green = blue = -1;
 			}
 		}

@@ -24,7 +24,6 @@ int main(int argc, char *argv[]){
 	printf("INIT (COLOR FULL)...\n");
 	//                 COMM    RED     GREEN   BLUE    Wa      Wb      Ha      Hb      MODE
 	char init[1024] = {'\x01', '\xFF', '\xFF', '\xFF', '\x00', '\x64', '\x00', '\x64', '\x01'};
-	// char init[1024] = {'\x01', '\xFF', '\xFF', '\xFF', '\x01', '\x90', '\x01', '\x90', '\x01'};
 	if((s = send_msg(init)) == -1){ pexit(1, "ERR"); }
 	sleep(1);
 	close(s);
@@ -58,7 +57,6 @@ int main(int argc, char *argv[]){
 	sleep(1);
 	close(s);
 
-	/*
 	printf("READING: \n");
 	char r[1024] = {'\x05'};
 	if((s = send_msg(r)) == -1){ pexit(1, "ERR"); }
@@ -68,6 +66,7 @@ int main(int argc, char *argv[]){
 	read(s, msg, MAX_TRANSITION);
 	close(s);
 
+	// /*
 	int i, j;
 	printf("\n\n");
 
@@ -77,12 +76,33 @@ int main(int argc, char *argv[]){
 		printf("Xb: \\x%x\n", msg[i + 1]);
 		printf("Ya: \\x%x\n", msg[i + 2]);
 		printf("Yb: \\x%x\n", msg[i + 3]);
-		printf("R: \\x%x\n",  msg[i + 4]);
-		printf("G: \\x%x\n",  msg[i + 5]);
-		printf("B: \\x%x\n",  msg[i + 6]);
+		printf("R: \x1B[31m\\x%x\n\x1B[0m",  msg[i + 4]);
+		printf("G: \x1B[32m\\x%x\n\x1B[0m",  msg[i + 5]);
+		printf("B: \x1B[34m\\x%x\n\x1B[0m",  msg[i + 6]);
 		printf("\n-----------\n");
 	}
-	*/
+
+
+
+
+
+	printf("READING (MIX): \n");
+	if((s = send_msg(r)) == -1){ pexit(1, "ERR"); }
+	sleep(1);
+	memset(msg, 0, MAX_TRANSITION);
+	read(s, msg, MAX_TRANSITION);
+	close(s);
+	j = 0;
+	printf("\n\n");
+	for(i = 0; i < (2 * 2) * 7; i += 7){
+		printf("X: \\x%d\n", hexm(msg[i], msg[i + 1]));
+		printf("Y: \\x%d\n", hexm(msg[i + 2], msg[i + 3]));
+		printf("{\x1B[31m\\x%2x\x1B[0m, \x1B[32m\\x%2x\x1B[0m, \x1B[34m\\x%2x\x1B[0m}\n",
+			ghex(msg[i + 4]),
+			ghex(msg[i + 5]),
+			ghex(msg[i + 6]));
+		printf("\n-----------\n");
+	}
 
 	return 0;
 }

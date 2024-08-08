@@ -31,8 +31,8 @@ struct COMMAND get_command(unsigned char data[]){
 			break;
 
 		case READ:
-			// if((int)strlen((char *)data) != 1)
-			// 	com.type = NONE;
+			if((int)strlen((char *)data) != 1)
+				com.type = NONE;
 			break;
 
 		default: break;
