@@ -63,8 +63,6 @@ void sdloop(struct LoopEvent le){
 			canvas.win_width * pscale);
 	}
 
-
-
 	if(canvas.initialized)
 		render_canvas(le);
 }

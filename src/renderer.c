@@ -209,10 +209,11 @@ void sdl_init_win(int width, int height, void (*sdloop)(struct LoopEvent)) {
 	}
 
 
-	SDLNet_FreeSocketSet(set);
 	SDLNet_TCP_Close(sock);
+	// SDLNet_FreeSocketSet(set);  // causing: Segmentation fault (core dumped)
 	SDL_DestroyWindow(win);
 	SDL_Quit();
+	SDLNet_Quit();
 }
 
 

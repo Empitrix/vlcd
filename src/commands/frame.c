@@ -3,7 +3,6 @@
 #include "../utils.h"
 #include "../canvas.h"
 #include <SDL2/SDL_stdinc.h>
-#include <stdio.h>
 
 /*
 comm    Xa      Xb      Ya      Yb      Wa      Wb      Ha      Hb     ...MONO[0, 1]/RGB (WIDTH.HEIGHT)

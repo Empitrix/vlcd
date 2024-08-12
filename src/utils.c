@@ -41,7 +41,7 @@ struct InitRes get_init_res(int argc, char *argv[]){
 	struct InitRes ires;
 	ires.scale = ires.port = -1;
 
-	if(argc < 3 && argc > 4)
+	if(argc < 3 || argc > 4)
 		pexit(1,
 			"Argument Error:\n%s <SCALE:8-bit> <PORT:16-bit>", argv[0]);
 
